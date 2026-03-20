@@ -1,285 +1,241 @@
-# ChatFiles 发布文案（各平台定稿）
+# ChatFiles 发布文案（定稿）
 
-> 发帖前：先把仓库改为 public
+> 发帖前先公开仓库：
 > ```bash
 > gh repo edit yoligehude14753/chatfiles --visibility public --accept-visibility-change-consequences
 > ```
 
 ---
 
-## 1. Hacker News（Show HN）
+## Hacker News
 
-**发帖地址**: https://news.ycombinator.com/submit
+**地址**: https://news.ycombinator.com/submit
 
-**标题**:
+**Title**:
 ```
-Show HN: ChatFiles – Open-source RAG file assistant (FastAPI + React, any LLM)
+Show HN: ChatFiles – Voice-powered file search that runs locally (Tauri + FastAPI)
 ```
 
-**正文（URL 栏填 GitHub 链接，text 栏填以下内容）**:
+**URL**: https://github.com/yoligehude14753/chatfiles
 
+**Text**:
 ```
-I built ChatFiles, an open-source AI file assistant that indexes your local documents and lets you chat with them.
+I built ChatFiles because I kept forgetting which file had what. "I know I had a Q4 strategy report somewhere..." — that kind of thing.
 
-It works like a personal ChatGPT that actually knows what's in your files — PDFs, Word docs, spreadsheets, presentations, images, code, markdown, and more (27 file types).
+It's a macOS menubar app. Cmd+Shift+Space opens a Spotlight-style search window. Type a query, get instant results. Press Cmd+Enter for an AI-powered answer with file citations.
+
+The part I'm most excited about: voice mode. Press Cmd+Shift+V, say "find my investment reports", and the AI searches your files and speaks the answer back. Under the hood it uses OpenAI's Realtime API with function calling — the AI decides when to search your files mid-conversation.
+
+Technical details:
+- Tauri v2 desktop app (11MB binary, 37MB RAM)
+- Python FastAPI backend bundled as PyInstaller sidecar (28MB)
+- SQLite for everything (metadata + 1536-dim vectors + chat history)
+- Hybrid search: numpy cosine similarity + keyword BM25
+- 27 file types: PDF, DOCX, XLSX, PPTX, images, code, markdown
+- WebSocket proxy for Realtime API (browser can't set auth headers)
+- .dmg installer, 32MB total
+
+Works with any OpenAI-compatible API. Fully local with Ollama.
+
+Would love feedback on the voice UX and retrieval strategy.
+```
+
+**发帖时间**: 北京时间周二~周四晚 21:00-23:00
+
+---
+
+## Reddit r/selfhosted
+
+**地址**: https://www.reddit.com/r/selfhosted/submit
+
+**Title**:
+```
+ChatFiles: macOS menubar app that indexes your files and lets you search them by voice. Self-hosted, Cmd+Shift+Space.
+```
+
+**Text**:
+```
+Just shipped ChatFiles — a macOS menubar app for searching your local files.
 
 How it works:
-1. Point it at your directories (Documents, Desktop, etc.)
-2. It parses and indexes everything with vector embeddings
-3. Ask questions in natural language → get answers with file citations
-
-Key technical decisions:
-- Hybrid search: numpy-based vector similarity + keyword BM25 scoring
-- OpenAI Responses API for chat (works with any OpenAI-compatible endpoint)
-- SQLite for everything (metadata + vectors), no external DB needed
-- FastAPI backend with streaming WebSocket
-- React + TypeScript + Tailwind frontend
-- File watcher (watchdog) for real-time re-indexing
-
-Supports any OpenAI-compatible LLM provider (Yunwu, OpenRouter, OpenAI, Ollama for local).
-
-Stack: Python 3.9+, FastAPI, React/TS, SQLite, numpy, Docker Compose
-
-GitHub: https://github.com/yoligehude14753/chatfiles
-```
-
-**最佳发帖时间**: 美国东部时间周二~周四上午 9-11 点（北京时间 21:00-23:00）
-
----
-
-## 2. Reddit r/selfhosted
-
-**发帖地址**: https://www.reddit.com/r/selfhosted/submit
-
-**标题**:
-```
-ChatFiles: self-hosted AI file assistant. Index your docs, chat with them. Docker one-command setup.
-```
-
-**正文**:
-
-```
-Just released ChatFiles — an open-source alternative to cloud-based document AI tools.
-
-What it does:
-- Indexes your local files: PDF, DOCX, XLSX, PPTX, images, code, markdown (27 types)
-- Chat interface with RAG (retrieval-augmented generation)
-- Answers your questions with file citations — shows which files the answer came from
-- Hybrid search: semantic vectors + keyword matching
+1. Indexes ~/Documents, ~/Desktop, ~/Downloads (PDF, Word, Excel, code, images — 27 types)
+2. Cmd+Shift+Space opens a Spotlight-style floating window
+3. Type a query → instant file results with similarity scores
+4. Cmd+Enter → AI answers your question citing specific files
+5. Cmd+Shift+V → voice mode: say your question, AI speaks the answer
 
 Self-hosting highlights:
-- `docker compose up` and you're running
-- SQLite-based, no external database needed
-- Works with any OpenAI-compatible API, or use Ollama for fully local/offline operation
-- All data stays on your machine
-- React frontend with dark mode
+- Everything runs locally: Tauri app + Python FastAPI sidecar
+- SQLite only — no Postgres, no Redis, no vector DB
+- .dmg installer (32MB), double-click to install
+- Works with any OpenAI-compatible API, or Ollama for fully offline
 
-Tech stack: Python/FastAPI, React/TypeScript/Tailwind, SQLite + numpy vectors
+The voice mode uses OpenAI Realtime API with function calling. When you ask "where's my budget report?", the AI automatically searches your files mid-conversation and tells you what it found.
 
 GitHub: https://github.com/yoligehude14753/chatfiles
-
-Happy to answer any questions!
 ```
 
 ---
 
-## 3. Reddit r/LocalLLaMA
+## Reddit r/LocalLLaMA
 
-**发帖地址**: https://www.reddit.com/r/LocalLLaMA/submit
+**地址**: https://www.reddit.com/r/LocalLLaMA/submit
 
-**标题**:
+**Title**:
 ```
-ChatFiles: open-source RAG over your filesystem — works with Ollama, OpenAI, or any compatible API
+ChatFiles: Voice-enabled RAG over your filesystem — Spotlight-style search with Realtime API function calling
 ```
 
-**正文**:
-
+**Text**:
 ```
-I built a local RAG system that indexes your filesystem and lets you chat with your files.
+Built a macOS desktop app that indexes your local files and lets you search + chat with them, including by voice.
 
-LLM setup:
-- Works with any OpenAI-compatible endpoint (tested with GPT-5.4-nano, Gemini 2.5 Flash)
-- Ollama support for fully local operation (llama3.2 + nomic-embed-text)
-- Embeddings via text-embedding-3-small or Ollama
-- Hybrid retrieval: numpy vector similarity + keyword BM25
+Architecture:
+- Tauri v2 (Rust) — 11MB binary, 37MB RAM, menubar resident
+- Python FastAPI sidecar (PyInstaller) — handles indexing + search + chat
+- SQLite: metadata + 1536-dim vectors (no ChromaDB/Pinecone)
+- Hybrid retrieval: numpy cosine similarity (0.7 weight) + keyword BM25 (0.3)
 
-What it indexes:
-- PDF, DOCX, XLSX, PPTX, images, code files, markdown, CSV, HTML (27 types total)
-- Uses LLM to summarize each file, then embeds the summary for semantic search
-- File watcher auto-indexes new/changed files
+Voice mode (the interesting part):
+- Uses OpenAI Realtime API via WebSocket
+- Registered `search_files` as a function tool
+- AI decides when to call it during voice conversation
+- Backend has a WebSocket proxy (browser can't set auth headers on WS)
+- After function_call returns, response.create with modalities: ["text", "audio"] triggers voice reply
 
-The chat engine:
-1. Rewrites your question based on conversation history
-2. Retrieves top-k relevant files via hybrid search
-3. Assembles context from file summaries
-4. Streams response with source citations
+Supports 27 file types. Works with any OpenAI-compatible endpoint. Ollama for local.
 
-FastAPI backend, React frontend, Docker Compose setup included.
+Looking for feedback on:
+1. Retrieval strategy — is numpy + BM25 hybrid enough, or should I add reranking?
+2. Voice UX — any ideas for making the voice interaction feel more natural?
 
 GitHub: https://github.com/yoligehude14753/chatfiles
-
-Feedback welcome — especially on retrieval strategy and embedding model choices.
 ```
 
 ---
 
-## 4. Twitter/X 发布推文
+## V2EX
+
+**地址**: https://www.v2ex.com/new （节点: `share` 或 `create`）
+
+**Title**:
+```
+ChatFiles：macOS 菜单栏应用，Cmd+Shift+Space 搜文件，还能语音对话找文件
+```
+
+**Text**:
+```
+做了一个 macOS 桌面应用，解决"记得内容但找不到文件"这个问题。
+
+核心交互：
+- 菜单栏常驻，Cmd+Shift+Space 呼出悬浮搜索框
+- 输入关键词，200ms 内返回匹配文件（带相似度百分比）
+- Cmd+Enter 让 AI 基于文件内容回答你的问题
+- Cmd+Shift+V 进入语音模式：直接说话，AI 自动搜文件并语音回复
+
+实测效果：
+搜"春季行情 策略"，0.5 秒内第一个结果就是光大证券的策略报告（49% 匹配）。
+
+技术栈：
+- Tauri v2 桌面应用（11MB，37MB 内存）
+- Python FastAPI 后端打包成 PyInstaller sidecar（28MB）
+- SQLite 存一切（元数据 + 1536 维向量 + 对话历史）
+- 混合搜索：numpy 余弦相似度 + 关键词 BM25
+- 语音：OpenAI Realtime API + function calling（AI 对话中自动搜文件）
+- 支持 27 种文件格式
+- .dmg 安装包，32MB，双击安装
+
+支持任意 OpenAI 兼容 API，也可以用 Ollama 完全本地运行。
+
+GitHub：https://github.com/yoligehude14753/chatfiles
+
+MIT 协议，欢迎 Star 和反馈。特别想听听大家对语音交互体验的看法。
+```
+
+---
+
+## Twitter/X
 
 **推文 1（主发布，配 demo.gif）**:
-
 ```
-Introducing ChatFiles 🔍
+I built a voice-powered file search for macOS.
 
-Open-source AI file assistant:
-→ Index PDFs, docs, spreadsheets, code, images (27 types)
-→ Chat with your files using RAG
-→ Hybrid search: vector + keyword
-→ Any LLM: OpenAI, Ollama, Gemini...
-→ Beautiful dark mode UI
+⌘⇧Space → type → instant results
+⌘Enter → AI answers with file citations
+⌘⇧V → just speak: "find my budget report"
 
-docker compose up → done.
+The AI searches your files mid-conversation using function calling.
+
+Tauri + FastAPI + SQLite. No cloud needed.
 
 github.com/yoligehude14753/chatfiles
 ```
 
-**推文 2（第二天，技术细节）**:
-
+**推文 2（技术 thread）**:
 ```
-How ChatFiles search works:
+How voice file search works in ChatFiles:
 
-1. Files → parse → LLM summarize → embed (1536-dim)
-2. Query → embed → numpy cosine similarity
-3. + keyword BM25 scoring
-4. Merge with 0.7/0.3 weights
-5. Top-k results → LLM generates answer with citations
+1. User speaks → mic captures PCM16 → WebSocket to Realtime API
+2. AI transcribes + understands intent
+3. AI calls search_files() function automatically
+4. Backend runs hybrid search (numpy vectors + BM25)
+5. Results fed back to AI
+6. AI speaks the answer with 14 audio chunks
 
-All in SQLite. No Pinecone, no Chroma, no Weaviate.
-
-Just numpy + SQLite.
-```
-
-**推文 3（第三天，配 screenshot_chat.png）**:
-
-```
-ChatFiles RAG in action:
-
-"帮我总结投资策略报告"
-→ Finds matching PDFs automatically
-→ Summarizes key findings from each report
-→ Cites specific files
-
-All running locally with your own files.
+The key insight: register your search as a "tool" in the Realtime API. The AI decides WHEN to search.
 ```
 
 ---
 
-## 5. V2EX
-
-**发帖地址**: https://www.v2ex.com/new （节点选 `share` 或 `create`）
+## 知乎
 
 **标题**:
 ```
-ChatFiles：开源本地 AI 文件助手，索引你电脑里的一切，用自然语言对话
+我做了一个能用语音搜文件的 macOS 应用（开源）
 ```
 
 **正文**:
-
 ```
-做了一个开源项目 ChatFiles，核心功能是索引你本地的文件，然后通过聊天的方式问答。
+## 痛点
 
-功能：
-- 支持 27 种文件格式：PDF、Word、Excel、PPT、图片、代码、Markdown 等
-- RAG 对话：问问题时自动检索相关文件，基于文件内容生成回答，带来源引用
-- 混合搜索：向量语义搜索 + 关键词匹配
-- 实时监控：文件变化自动重新索引
+"我记得之前看过一份关于春季行情的策略报告，但忘了存在哪了。"
 
-技术栈：
-- 后端：Python + FastAPI + SQLite（元数据+向量全部存 SQLite，没用额外数据库）
-- 前端：React + TypeScript + Tailwind CSS，暗色主题
-- LLM：支持任何 OpenAI 兼容 API（云雾、OpenAI、Ollama 等）
-- 向量计算：numpy 批量余弦相似度，12000 个文件搜索秒级返回
-- 部署：docker compose up 一键启动
+这种情况你有过吗？Spotlight 只能搜文件名，搜不到内容。
 
-实测效果：
-- 索引了 ~/Documents + ~/Desktop + ~/Downloads 下 12000+ 个文件
-- 问"帮我总结投资策略报告"，秒级返回光大证券、东吴证券等多份报告的结构化总结
-- 前后端分离，支持中英双语切换
+## 解决方案
 
-GitHub：https://github.com/yoligehude14753/chatfiles
+我做了 ChatFiles，一个 macOS 菜单栏应用：
 
-MIT 协议，欢迎 Star 和 PR。
+1. 后台自动索引你的 Documents/Desktop/Downloads
+2. Cmd+Shift+Space 呼出搜索框，输入"春季行情 策略"
+3. 0.5 秒出结果——第一个就是光大证券的策略报告
 
-有什么建议或者想要的功能欢迎留言。
-```
-
----
-
-## 6. 知乎文章
-
-**标题**:
-```
-我开源了一个本地 AI 文件助手：索引 PDF、Word、Excel、代码，直接对话
-```
-
-**正文**:
-
-```
-## 为什么做这个
-
-电脑里文件越来越多，经常记得内容但找不到在哪个文件里。现有的搜索要么只能搜文件名，要么需要把文件上传到云端。
-
-我想要的是：不上传任何文件，在本地就能用自然语言搜索和问答。
-
-所以做了 ChatFiles。
-
-## 它能做什么
-
-把你电脑上的文件（PDF、Word、Excel、PPT、图片、代码、Markdown 等 27 种格式）全部索引，然后你可以用聊天的方式提问，比如：
-
-- "帮我找关于投资策略的报告"
-- "总结一下最近的会议纪要"
-- "哪些表格里有预算数据"
-
-它会自动检索相关文件，基于文件内容生成回答，并告诉你答案来自哪个文件。
+更酷的是语音模式：按 Cmd+Shift+V，说"帮我找投资策略报告"，AI 会自动搜索你的文件，然后用语音告诉你找到了什么。
 
 ## 技术实现
 
-- **搜索**：混合搜索 = 向量语义搜索（numpy 余弦相似度） + 关键词 BM25 匹配
-- **对话**：RAG（检索增强生成）— 先搜文件，再让 LLM 基于搜索结果回答
-- **后端**：Python + FastAPI，支持 WebSocket 流式输出
-- **前端**：React + TypeScript + Tailwind CSS，暗色主题，中英双语
-- **存储**：SQLite 一个文件搞定（元数据+向量+对话历史）
-- **LLM**：支持任何 OpenAI 兼容 API，也可以用 Ollama 完全本地运行
+语音模式用的是 OpenAI Realtime API 的 function calling。我把"搜索文件"注册成了一个 tool，AI 在语音对话过程中会自主决定什么时候调用搜索。这意味着你不需要先搜再问——直接对话就行。
 
-实测 12000+ 个文件，搜索秒级返回。
+全栈：Tauri v2（11MB） + Python FastAPI sidecar（28MB） + SQLite + numpy 向量搜索
 
-## 快速开始
-
-```bash
-git clone https://github.com/yoligehude14753/chatfiles
-cd chatfiles
-cp .env.example .env  # 填入你的 API Key
-docker compose up
-```
-
-打开 http://localhost:3000 就能用了。
+搜索用的是混合策略：70% 语义向量匹配 + 30% 关键词 BM25，12000 个文件搜索秒级返回。
 
 GitHub：https://github.com/yoligehude14753/chatfiles
 
-MIT 协议，完全免费开源。欢迎 Star。
+MIT 协议，完全免费开源。.dmg 双击安装，32MB。
 ```
 
 ---
 
-## 发布节奏建议
+## 发布节奏
 
-| 时间 | 平台 | 备注 |
-|------|------|------|
-| Day 1 晚 9 点 | Hacker News | 对应美东上午，流量最大 |
-| Day 1 同时 | Reddit r/selfhosted + r/LocalLLaMA | 同一天铺开 |
-| Day 1 同时 | V2EX | 中文社区 |
-| Day 2 | Twitter/X 推文 1 | 配 demo.gif |
-| Day 3 | Twitter/X 推文 2 | 技术细节 |
-| Day 4 | 知乎文章 | 长文，讲故事 |
-| Day 5 | Twitter/X 推文 3 | 配截图 |
-| Week 2 | Product Hunt | 等积累一些 Star 后 |
+| 时间 | 平台 | 核心角度 |
+|------|------|---------|
+| Day 1 晚 9 点 | Hacker News | "voice-powered file search with function calling" |
+| Day 1 同时 | Reddit r/selfhosted | "menubar app, .dmg, no cloud" |
+| Day 1 同时 | Reddit r/LocalLLaMA | "Realtime API + function calling architecture" |
+| Day 1 同时 | V2EX | "语音搜文件" |
+| Day 2 | Twitter 推文 1 | demo.gif |
+| Day 3 | Twitter 推文 2 | 技术 thread |
+| Day 5 | 知乎 | 长文讲故事 |
+| Week 2 | Product Hunt | 等有 Star 基础 |
