@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "ChatFiles",
+    "tagline": "与你的文件对话。本地运行。隐私优先。"
+  },
+  "sidebar": {
+    "newChat": "新对话",
+    "conversations": "对话历史",
+    "files": "文件管理",
+    "settings": "设置",
+    "noConversations": "还没有对话记录"
+  },
+  "chat": {
+    "placeholder": "随便问关于你文件的任何问题...",
+    "send": "发送",
+    "thinking": "思考中...",
+    "sources": "引用来源",
+    "welcome": {
+      "title": "你想了解什么？",
+      "subtitle": "向你索引的文件提问 — PDF、文档、表格、代码等。",
+      "suggestions": [
+        "总结我最近的报告",
+        "查找关于项目规划的文档",
+        "哪些表格包含预算数据？",
+        "展示包含图表的演示文稿"
+      ]
+    }
+  },
+  "files": {
+    "title": "已索引文件",
+    "total": "总计",
+    "indexed": "已索引",
+    "noFiles": "还没有索引任何文件。点击「开始索引」按钮开始。",
+    "startIndexing": "开始索引",
+    "indexing": "索引中...",
+    "allTypes": "所有类型"
+  },
+  "settings": {
+    "title": "设置",
+    "provider": "LLM 提供商",
+    "ollamaStatus": "Ollama 状态",
+    "connected": "已连接",
+    "disconnected": "未连接",
+    "directories": "扫描目录",
+    "stats": "统计信息",
+    "budget": "预算"
+  }
+}

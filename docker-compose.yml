@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ${HOME}/Documents:/mnt/documents:ro
+    environment:
+      - LLM_PROVIDER=ollama
+      - EMBEDDING_PROVIDER=ollama
+      - OLLAMA_HOST=http://ollama:11434
+      - SCAN_DIRECTORIES=/mnt/documents
+      - DATABASE_PATH=/app/data/db/files.db
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
