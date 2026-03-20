@@ -26,7 +26,8 @@ export default function VoiceButton({ active, onClose, onTranscript }: Props) {
     (async () => {
       try {
         // Get API key from backend settings
-        const settingsRes = await fetch("http://localhost:8000/api/v1/settings");
+        const base = (window as any).__TAURI__ ? "" : "http://localhost:8000";
+        const settingsRes = await fetch(`${base}/api/v1/settings`);
         const settings = await settingsRes.json();
 
         const apiKey = settings.yunwu_api_key || API_KEY;
@@ -119,7 +120,7 @@ export default function VoiceButton({ active, onClose, onTranscript }: Props) {
                 setStatus("thinking");
                 try {
                   const args = JSON.parse(data.arguments);
-                  const searchRes = await fetch("http://localhost:8000/api/v1/search", {
+                  const searchRes = await fetch(`${base}/api/v1/search`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ query: args.query, type: "files", limit: 5 }),

@@ -6,7 +6,7 @@ import VoiceButton from "../components/VoiceButton";
 import StatusBar from "../components/StatusBar";
 import type { FileResult } from "../types";
 
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = (window as any).__TAURI__ ? "/api/v1" : "http://localhost:8000/api/v1";
 
 export default function SpotlightWindow() {
   const [query, setQuery] = useState("");
