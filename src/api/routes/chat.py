@@ -1,11 +1,14 @@
 import json
 import logging
+import asyncio
 from typing import Optional, List
 
+import websockets
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 from src.api.app import get_services, get_db_session
+from src.core.config import settings
 from src.core.database import Conversation, Message
 
 logger = logging.getLogger(__name__)
@@ -212,3 +215,42 @@ async def delete_conversation(conversation_id: int):
         return {"status": "deleted"}
     finally:
         session.close()
+
+
+@router.websocket("/realtime")
+async def realtime_proxy(ws: WebSocket):
+    """Proxy WebSocket to Yunwu Realtime API (browser can't set auth headers)."""
+    await ws.accept()
+
+    yunwu_url = f"wss://yunwu.ai/v1/realtime?model=gpt-4o-realtime-preview"
+    headers = {
+        "Authorization": f"Bearer {settings.yunwu_api_key}",
+        "OpenAI-Beta": "realtime=v1",
+    }
+
+    try:
+        async with websockets.connect(yunwu_url, additional_headers=headers) as upstream:
+
+            async def client_to_upstream():
+                try:
+                    while True:
+                        data = await ws.receive_text()
+                        await upstream.send(data)
+                except WebSocketDisconnect:
+                    pass
+
+            async def upstream_to_client():
+                try:
+                    async for msg in upstream:
+                        await ws.send_text(msg)
+                except Exception:
+                    pass
+
+            await asyncio.gather(client_to_upstream(), upstream_to_client())
+
+    except Exception as e:
+        logger.error("Realtime proxy error: %s", e)
+        try:
+            await ws.send_json({"type": "error", "error": {"message": str(e)}})
+        except Exception:
+            pass

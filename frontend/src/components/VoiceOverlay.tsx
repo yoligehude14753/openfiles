@@ -2,7 +2,11 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Mic, MicOff, Loader2, X } from "lucide-react";
 
-const WS_URL = "wss://yunwu.ai/v1/realtime?model=gpt-4o-realtime-preview";
+function getRealtimeWsUrl() {
+  const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const host = (window as any).__TAURI__ ? "localhost:8000" : window.location.host;
+  return `${proto}//${host}/api/v1/realtime`;
+}
 
 interface Props {
   apiBase: string;
@@ -35,20 +39,11 @@ export default function VoiceOverlay({ apiBase, onClose, onTranscript }: Props) 
 
     (async () => {
       try {
-        const settingsRes = await fetch(`${apiBase}/settings`);
-        const settings = await settingsRes.json();
-        const apiKey = settings.yunwu_api_key;
-        if (!apiKey) {
-          setStatus("error");
-          setErrorMsg("No API key configured. Set YUNWU_API_KEY in .env");
-          return;
-        }
-
         const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 24000, channelCount: 1, echoCancellation: true } });
         if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         streamRef.current = stream;
 
-        const ws = new WebSocket(WS_URL);
+        const ws = new WebSocket(getRealtimeWsUrl());
         wsRef.current = ws;
 
         ws.onopen = () => {
@@ -115,10 +110,10 @@ export default function VoiceOverlay({ apiBase, onClose, onTranscript }: Props) 
                     .map((r: any) => `${r.path.split("/").pop()}: ${(r.summary || "").slice(0, 200)}`)
                     .join("\n");
                   ws.send(JSON.stringify({ type: "conversation.item.create", item: { type: "function_call_output", call_id: data.call_id, output: summary || "No files found." } }));
-                  ws.send(JSON.stringify({ type: "response.create" }));
+                  ws.send(JSON.stringify({ type: "response.create", response: { modalities: ["text", "audio"] } }));
                 } catch {
                   ws.send(JSON.stringify({ type: "conversation.item.create", item: { type: "function_call_output", call_id: data.call_id, output: "Search error." } }));
-                  ws.send(JSON.stringify({ type: "response.create" }));
+                  ws.send(JSON.stringify({ type: "response.create", response: { modalities: ["text", "audio"] } }));
                 }
               }
               break;
