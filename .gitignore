@@ -36,3 +36,6 @@ Thumbs.db
 
 # Docker
 ollama_data/
+target/
+target/
+node_modules/
