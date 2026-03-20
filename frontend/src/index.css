@@ -12,6 +12,10 @@
     background: transparent;
   }
 
+  ::selection {
+    @apply bg-brand-500/30;
+  }
+
   ::-webkit-scrollbar {
     @apply w-1;
   }
@@ -21,19 +25,16 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700 rounded-full;
+    @apply bg-zinc-700/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-600;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg
-           font-medium transition-colors duration-150 disabled:opacity-50;
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 0; }
-  100% { transform: scale(0.8); opacity: 0.5; }
 }

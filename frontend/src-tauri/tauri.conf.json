@@ -17,13 +17,13 @@
         "title": "ChatFiles",
         "url": "/",
         "width": 680,
-        "height": 500,
+        "height": 520,
         "center": true,
         "resizable": false,
         "decorations": false,
         "transparent": false,
         "alwaysOnTop": true,
-        "visible": true,
+        "visible": false,
         "skipTaskbar": true
       }
     ],
@@ -34,13 +34,14 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["dmg"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
+      "icons/128x128@2x.png"
+    ],
+    "externalBin": [
+      "binaries/chatfiles-server"
     ]
   },
   "plugins": {

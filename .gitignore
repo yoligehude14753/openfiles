@@ -39,3 +39,6 @@ ollama_data/
 target/
 target/
 node_modules/
+dist/
+*.spec
+frontend/src-tauri/binaries/
