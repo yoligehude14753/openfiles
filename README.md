@@ -1,27 +1,35 @@
-# OpenFiles
+<p align="center">
+  <h1 align="center">OpenFiles</h1>
+  <p align="center">
+    <strong>Open-source AI assistant for your local files.</strong><br>
+    Search by meaning. Chat with citations. 100% local with Ollama.
+  </p>
+  <p align="center">
+    <a href="https://github.com/yoligehude14753/openfiles/stargazers"><img src="https://img.shields.io/github/stars/yoligehude14753/openfiles?style=social" alt="Stars"></a>
+    <a href="https://github.com/yoligehude14753/openfiles/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yoligehude14753/openfiles" alt="License"></a>
+    <a href="https://github.com/yoligehude14753/openfiles/actions"><img src="https://img.shields.io/github/actions/workflow/status/yoligehude14753/openfiles/ci.yml?branch=main" alt="CI"></a>
+    <img src="https://img.shields.io/badge/python-3.9+-blue" alt="Python">
+    <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform">
+  </p>
+  <p align="center">
+    <a href="#quick-start">Quick Start</a> &middot;
+    <a href="#features">Features</a> &middot;
+    <a href="#how-it-works">How It Works</a> &middot;
+    <a href="README_zh.md">中文</a>
+  </p>
+</p>
 
-> Open-source AI assistant for your local files.
+<p align="center">
+  <img src="docs/assets/demo.gif" alt="OpenFiles demo — search files by meaning, chat with citations" width="720">
+</p>
 
-**OpenFiles** helps you search, understand, and chat with your local documents using natural language — powered by any LLM, fully local with [Ollama](https://ollama.com).
-
-<!-- TODO: Replace with a real demo recording -->
-<!-- ![Demo](docs/demo.gif) -->
-
-## Why OpenFiles?
-
-Traditional file search (Spotlight, Everything) only matches filenames and exact keywords. OpenFiles **understands the content** of your files, finds what you mean (not just what you typed), and lets you ask follow-up questions with source citations.
-
-## Highlights
-
-- **Search by meaning** — Type _"find my Q4 budget report"_ and get results based on content, not filenames
-- **Chat with citations** — Ask questions about your files and get AI answers that cite specific documents
-- **27 file types** — PDFs, Word, Excel, PowerPoint, images, code, markdown, and more
-- **Hybrid search** — 70% semantic (vector) + 30% keyword matching for accurate retrieval
-- **Real-time indexing** — Watches your directories and auto-indexes new and changed files
-- **Any LLM** — Works with any OpenAI-compatible API. Fully local with [Ollama](https://ollama.com) — no API key needed
-- **Privacy-first** — Files stay on your machine. SQLite for everything — no Postgres, no Redis, no vector DB
+> **Spotlight searches filenames. OpenFiles searches meaning.**
+>
+> Type _"find my Q4 budget report"_ — OpenFiles finds the right PDF by understanding its content, then answers follow-up questions with source citations.
 
 ## Quick Start
+
+Get running in 30 seconds:
 
 ```bash
 git clone https://github.com/yoligehude14753/openfiles.git
@@ -30,24 +38,55 @@ cp .env.example .env
 docker compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) and start searching.
 
-> **Want to set up manually?** See [Manual Setup](#manual-setup) below.
+> Uses [Ollama](https://ollama.com) by default — no API keys, nothing leaves your machine.
 
-### Prerequisites
+## Features
 
-- **Python 3.9+**
-- **Node.js 18+** (for the web UI)
-- One of the following LLM providers:
-  - **Ollama** (fully local, no API key) — install from [ollama.com](https://ollama.com)
-  - **Any OpenAI-compatible API** (e.g. OpenRouter, Together, etc.)
-  - **OpenAI** directly
+| | |
+|---|---|
+| **Search by meaning** | Describe what you're looking for. OpenFiles finds files by content, not filenames. |
+| **Chat with your files** | Ask questions, get AI answers citing specific documents. |
+| **27 file types** | PDFs, Word, Excel, PowerPoint, images, code, markdown, and more. |
+| **Hybrid search** | 70% semantic vectors + 30% keyword matching for precise retrieval. |
+| **Real-time indexing** | File watcher auto-indexes new and changed files. |
+| **Any LLM** | Ollama (local), OpenAI, Claude, or any OpenAI-compatible API. |
+| **Privacy-first** | Files stay on your machine. SQLite only — no Postgres, no Redis, no vector DB. |
+
+## How It Works
+
+```
+  "find my Q4 budget report"
+            │
+            ▼
+   ┌─────────────────┐
+   │  Hybrid Search   │  70% semantic + 30% keyword
+   │  (numpy + SQL)   │
+   └────────┬────────┘
+            │
+   ┌────────▼────────┐
+   │   RAG Engine     │  retrieves relevant chunks
+   │   + LLM (Ollama) │  generates answer with citations
+   └────────┬────────┘
+            │
+            ▼
+   "Found in Q4-Strategy.pdf (p.3):
+    Revenue grew 23% YoY..."
+```
+
+**Stack:** Python/FastAPI backend, React/TypeScript frontend, SQLite + numpy vectors, Ollama.
 
 ## Use Cases
 
-- **"I remember the content, but not the filename"** — Describe what you're looking for in plain English. OpenFiles finds matching files by understanding their content.
-- **"Summarize what matters across multiple files"** — Ask a question that spans several documents. Get a single answer with citations.
-- **"Where does this concept appear in my codebase?"** — Search code, docs, and configs semantically.
+**"I remember the content, but not the filename"**
+> Describe what you're looking for in plain English. OpenFiles finds matching files by understanding their content.
+
+**"Summarize what matters across multiple files"**
+> Ask a question that spans several documents. Get a single answer with citations.
+
+**"Where does this concept appear in my codebase?"**
+> Search code, docs, and configs semantically — not just grep.
 
 ## Supported File Types
 
@@ -59,41 +98,17 @@ Open [http://localhost:3000](http://localhost:3000)
 | Images | JPG, PNG, GIF, WebP, SVG, TIFF |
 | Code | Python, JavaScript, TypeScript, Java, C/C++, HTML, CSS, JSON, YAML |
 
-## Architecture
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│   Frontend   │────▶│   FastAPI     │────▶│  LLM Provider   │
-│   React/TS   │◀────│   Backend     │◀────│  (Ollama/OpenAI/ │
-└─────────────┘     └──────┬───────┘     │   and more...)  │
-                           │              └─────────────────┘
-                    ┌──────┴───────┐
-                    │   SQLite     │
-                    │  + Vectors   │
-                    └──────────────┘
-```
-
-- **Frontend**: React + TypeScript + Tailwind CSS
-- **Backend**: FastAPI + Python
-- **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Claude, and more)
-- **Embeddings**: text-embedding-3-small (default), Ollama, or local SentenceTransformers
-- **Storage**: SQLite for metadata + numpy-powered vector similarity search
-- **Parsing**: PyPDF2, python-docx, python-pptx, openpyxl, Pillow, BeautifulSoup
-
 ## Configuration
 
-Copy `.env.example` to `.env` and customize:
-
 ```bash
-# Use Ollama (local, no API key — recommended)
+# Default: Ollama (local, no API key)
 LLM_PROVIDER=ollama
 EMBEDDING_PROVIDER=ollama
 
-# Or use any OpenAI-compatible API
+# Or any OpenAI-compatible API
 LLM_PROVIDER=openai-compatible
 OPENAI_COMPATIBLE_API_KEY=sk-your-key
 OPENAI_COMPATIBLE_BASE_URL=https://api.example.com/v1
-OPENAI_COMPATIBLE_MODEL=gpt-4o-mini
 
 # Directories to index
 SCAN_DIRECTORIES=~/Documents,~/Desktop,~/Downloads
@@ -101,87 +116,66 @@ SCAN_DIRECTORIES=~/Documents,~/Desktop,~/Downloads
 
 See [.env.example](.env.example) for all options.
 
-## CLI Usage
+## CLI
 
 ```bash
 python main.py init          # Initialize database
-python main.py index         # Index all configured directories
-python main.py reindex       # Clear old data and rebuild from scratch
-python main.py search "..."  # Search from the terminal
-python main.py stats         # Show indexing statistics
+python main.py index         # Index configured directories
+python main.py search "..."  # Search from terminal
 python main.py serve         # Start the web server
 ```
 
 ## API
 
-The backend exposes a REST + WebSocket API:
+REST + WebSocket API with [Swagger UI](http://localhost:8000/docs):
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
+| `/api/v1/search` | POST | Semantic file search |
 | `/api/v1/chat` | POST | Send a chat message |
 | `/api/v1/chat/stream` | WS | Stream chat responses |
-| `/api/v1/search` | POST | Semantic file search |
 | `/api/v1/files` | GET | List indexed files |
 | `/api/v1/index` | POST | Trigger indexing |
 | `/api/v1/stats` | GET | Get statistics |
-| `/api/v1/settings` | GET | Get/update settings |
-| `/api/health` | GET | Health check |
-
-Full API docs at [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI).
 
 ## Manual Setup
 
 ```bash
-git clone https://github.com/yoligehude14753/openfiles.git
-cd openfiles
+git clone https://github.com/yoligehude14753/openfiles.git && cd openfiles
 ./setup.sh
-```
 
-Then start the backend and frontend:
+# Terminal 1 — Backend
+source venv/bin/activate && python main.py serve
 
-```bash
-# Terminal 1 - Backend
-source venv/bin/activate
-python main.py serve
-
-# Terminal 2 - Frontend
+# Terminal 2 — Frontend
 cd frontend && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+**Prerequisites:** Python 3.9+, Node.js 18+, [Ollama](https://ollama.com) (recommended)
 
 ## Roadmap
 
-- [x] Chat interface with RAG (Retrieval-Augmented Generation)
-- [x] Ollama (local LLM) support
+- [x] RAG chat with file citations
 - [x] Hybrid search (vector + keyword)
-- [x] File watcher (real-time indexing)
-- [x] Multi-format parsers (PDF, DOCX, XLSX, PPTX, images, code)
-- [x] Dark mode UI with i18n (English + Chinese)
+- [x] Real-time file watcher
+- [x] 27 file type parsers
+- [x] Ollama / OpenAI / Claude support
+- [x] Dark mode + i18n (EN/中文)
 - [ ] Voice input (OpenAI Realtime API)
 - [ ] Desktop app (Tauri) with Spotlight-style UX
-- [ ] Slide-level search & export
 - [ ] Plugin system for custom parsers
 - [ ] Multi-user support
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-```bash
-# Development setup
-./setup.sh
-source venv/bin/activate
-python main.py serve  # Backend
-
-cd frontend
-npm run dev  # Frontend with hot reload
-```
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE) — use it however you want.
+[MIT](LICENSE)
 
 ---
 
-**OpenFiles** is built with Python, React, and a lot of caffeine. If you find it useful, please give it a star!
+<p align="center">
+  If OpenFiles helps you find what you're looking for, consider giving it a <a href="https://github.com/yoligehude14753/openfiles">star</a>.
+</p>
