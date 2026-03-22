@@ -2,8 +2,8 @@
 set -e
 
 echo "╔════════════════════════════════════════╗"
-echo "║         ChatFiles Setup                ║"
-echo "║  Chat with your files. Locally.        ║"
+echo "║         OpenFiles Setup                ║"
+echo "║  AI assistant for your local files.    ║"
 echo "╚════════════════════════════════════════╝"
 echo ""
 

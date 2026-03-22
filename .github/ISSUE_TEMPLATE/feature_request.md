@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for ChatFiles
+about: Suggest an idea for OpenFiles
 title: "[Feature] "
 labels: enhancement
 assignees: ""

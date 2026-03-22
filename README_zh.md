@@ -1,27 +1,26 @@
-# ChatFiles
+# OpenFiles
 
-> 与你的文件对话。本地运行。隐私优先。
+> 开源 AI 本地文件助手。
 
-**ChatFiles** 是一个开源的 AI 文件助手，它可以索引你的本地文档，让你用自然语言与它们对话。
+**OpenFiles** 可以索引你的本地文档，让你用自然语言搜索和对话。支持任何 LLM，用 [Ollama](https://ollama.com) 完全本地运行。
 
-## 为什么选择 ChatFiles？
+## 为什么选择 OpenFiles？
 
-- **与任何文件对话** — PDF、Word、表格、PPT、图片、代码等
-- **灵活的 LLM** — 支持任何 OpenAI 兼容 API（云雾、OpenAI、Ollama 等）
+传统文件搜索（Spotlight、Everything）只能匹配文件名和精确关键词。OpenFiles **理解文件内容**，找到你想要的（而不只是你输入的），还能带引用地回答后续问题。
+
+- **语义搜索** — 输入"找我的 Q4 预算报告"，根据内容匹配，而不是文件名
+- **带引用的问答** — 对文件提问，AI 回答时标注来源文件
+- **灵活的 LLM** — 支持任何 OpenAI 兼容 API（Ollama、OpenAI、云雾等）
 - **混合搜索** — 语义向量搜索 + 关键词匹配，检索更精准
 - **实时索引** — 监控目录变化，自动索引新增和修改的文件
-- **精美界面** — 现代暗色主题聊天界面，带文件引用和来源显示
 - **隐私优先** — 文件留在本地。用 Ollama 可以完全离线运行
 
 ## 快速开始
 
-### Docker（推荐）
-
 ```bash
-git clone https://github.com/yoligehude14753/chatfiles.git
-cd chatfiles
+git clone https://github.com/yoligehude14753/openfiles.git
+cd openfiles
 cp .env.example .env
-# 编辑 .env，填入你的 API Key
 docker compose up
 ```
 
@@ -30,8 +29,8 @@ docker compose up
 ### 手动安装
 
 ```bash
-git clone https://github.com/yoligehude14753/chatfiles.git
-cd chatfiles
+git clone https://github.com/yoligehude14753/openfiles.git
+cd openfiles
 ./setup.sh
 ```
 
@@ -51,14 +50,14 @@ cd frontend && npm run dev
 复制 `.env.example` 到 `.env` 并修改：
 
 ```bash
-# 使用云雾 API（推荐，支持 GPT-5/Gemini 等模型）
+# 使用 Ollama（本地运行，无需 API Key）
+LLM_PROVIDER=ollama
+EMBEDDING_PROVIDER=ollama
+
+# 或使用云雾 API（推荐，支持 GPT-5/Gemini 等模型）
 LLM_PROVIDER=yunwu
 YUNWU_API_KEY=sk-你的密钥
 YUNWU_MODEL=gpt-5.4-nano
-
-# 或使用 Ollama（本地运行，无需 API Key）
-LLM_PROVIDER=ollama
-EMBEDDING_PROVIDER=ollama
 ```
 
 ## CLI 命令

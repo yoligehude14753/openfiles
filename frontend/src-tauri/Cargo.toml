@@ -1,10 +1,10 @@
 [package]
-name = "chatfiles"
+name = "openfiles"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "chatfiles_lib"
+name = "openfiles_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

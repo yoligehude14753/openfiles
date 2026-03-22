@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ChatFiles server entry point for PyInstaller sidecar packaging."""
+"""OpenFiles server entry point for PyInstaller sidecar packaging."""
 import uvicorn
 from src.core.config import settings
 from src.core.database import init_db

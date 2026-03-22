@@ -1,6 +1,6 @@
 {
   "identifier": "default",
-  "description": "Default capabilities for ChatFiles",
+  "description": "Default capabilities for OpenFiles",
   "windows": ["spotlight", "settings"],
   "permissions": [
     "core:default",

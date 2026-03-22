@@ -1,63 +1,53 @@
-# ChatFiles
+# OpenFiles
 
-> Chat with your files. Locally. Privately.
+> Open-source AI assistant for your local files.
 
-**ChatFiles** is an open-source AI file assistant that indexes your local documents and lets you chat with them using natural language.
+**OpenFiles** helps you search, understand, and chat with your local documents using natural language — powered by any LLM, fully local with [Ollama](https://ollama.com).
 
-![Demo](docs/demo.gif)
+<!-- TODO: Replace with a real demo recording -->
+<!-- ![Demo](docs/demo.gif) -->
 
-## Why ChatFiles?
+## Why OpenFiles?
 
-- **Chat with any file** — PDFs, Word docs, spreadsheets, presentations, images, code, and more
-- **Flexible LLM** — Works with any OpenAI-compatible API (Yunwu, OpenAI, Ollama, etc.)
-- **Hybrid search** — Combines semantic (vector) search with keyword matching for accurate retrieval
+Traditional file search (Spotlight, Everything) only matches filenames and exact keywords. OpenFiles **understands the content** of your files, finds what you mean (not just what you typed), and lets you ask follow-up questions with source citations.
+
+## Highlights
+
+- **Search by meaning** — Type _"find my Q4 budget report"_ and get results based on content, not filenames
+- **Chat with citations** — Ask questions about your files and get AI answers that cite specific documents
+- **27 file types** — PDFs, Word, Excel, PowerPoint, images, code, markdown, and more
+- **Hybrid search** — 70% semantic (vector) + 30% keyword matching for accurate retrieval
 - **Real-time indexing** — Watches your directories and auto-indexes new and changed files
-- **Beautiful UI** — Modern dark-mode chat interface with file citations and source references
-- **Privacy-first** — Your files stay on your machine. Use a local LLM (Ollama) for fully offline operation
+- **Any LLM** — Works with any OpenAI-compatible API. Fully local with [Ollama](https://ollama.com) — no API key needed
+- **Privacy-first** — Files stay on your machine. SQLite for everything — no Postgres, no Redis, no vector DB
 
 ## Quick Start
 
-### Option 1: Docker (recommended)
-
 ```bash
-git clone https://github.com/yoligehude14753/chatfiles.git
-cd chatfiles
+git clone https://github.com/yoligehude14753/openfiles.git
+cd openfiles
 cp .env.example .env
-# Edit .env — add your API key
 docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-### Option 2: Manual Setup
-
-```bash
-git clone https://github.com/yoligehude14753/chatfiles.git
-cd chatfiles
-./setup.sh
-```
-
-Then start the backend and frontend:
-
-```bash
-# Terminal 1 - Backend
-source venv/bin/activate
-python main.py serve
-
-# Terminal 2 - Frontend
-cd frontend && npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
+> **Want to set up manually?** See [Manual Setup](#manual-setup) below.
 
 ### Prerequisites
 
 - **Python 3.9+**
 - **Node.js 18+** (for the web UI)
 - One of the following LLM providers:
-  - **Any OpenAI-compatible API** (e.g. [Yunwu](https://yunwu.ai), OpenRouter, etc.)
-  - **OpenAI** directly
   - **Ollama** (fully local, no API key) — install from [ollama.com](https://ollama.com)
+  - **Any OpenAI-compatible API** (e.g. OpenRouter, Yunwu, etc.)
+  - **OpenAI** directly
+
+## Use Cases
+
+- **"I remember the content, but not the filename"** — Describe what you're looking for in plain English. OpenFiles finds matching files by understanding their content.
+- **"Summarize what matters across multiple files"** — Ask a question that spans several documents. Get a single answer with citations.
+- **"Where does this concept appear in my codebase?"** — Search code, docs, and configs semantically.
 
 ## Supported File Types
 
@@ -74,8 +64,8 @@ Open [http://localhost:3000](http://localhost:3000)
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
 │   Frontend   │────▶│   FastAPI     │────▶│  LLM Provider   │
-│   React/TS   │◀────│   Backend     │◀────│  (Yunwu/OpenAI/ │
-└─────────────┘     └──────┬───────┘     │   Ollama/...)   │
+│   React/TS   │◀────│   Backend     │◀────│  (Ollama/OpenAI/ │
+└─────────────┘     └──────┬───────┘     │   Yunwu/...)    │
                            │              └─────────────────┘
                     ┌──────┴───────┐
                     │   SQLite     │
@@ -84,8 +74,8 @@ Open [http://localhost:3000](http://localhost:3000)
 ```
 
 - **Frontend**: React + TypeScript + Tailwind CSS
-- **Backend**: FastAPI with OpenAI Responses API support
-- **LLM**: Any OpenAI-compatible provider (Yunwu, OpenAI, Ollama, Claude, Kimi)
+- **Backend**: FastAPI + Python
+- **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Yunwu, Claude, Kimi)
 - **Embeddings**: text-embedding-3-small (default), Ollama, or local SentenceTransformers
 - **Storage**: SQLite for metadata + numpy-powered vector similarity search
 - **Parsing**: PyPDF2, python-docx, python-pptx, openpyxl, Pillow, BeautifulSoup
@@ -95,15 +85,15 @@ Open [http://localhost:3000](http://localhost:3000)
 Copy `.env.example` to `.env` and customize:
 
 ```bash
-# Use any OpenAI-compatible API
+# Use Ollama (local, no API key)
+LLM_PROVIDER=ollama
+EMBEDDING_PROVIDER=ollama
+
+# Or use any OpenAI-compatible API
 LLM_PROVIDER=yunwu
 YUNWU_API_KEY=sk-your-key
 YUNWU_BASE_URL=https://yunwu.ai/v1
 YUNWU_MODEL=gpt-5.4-nano
-
-# Or use Ollama (local, no API key)
-LLM_PROVIDER=ollama
-EMBEDDING_PROVIDER=ollama
 
 # Directories to index
 SCAN_DIRECTORIES=~/Documents,~/Desktop,~/Downloads
@@ -139,19 +129,39 @@ The backend exposes a REST + WebSocket API:
 
 Full API docs at [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI).
 
+## Manual Setup
+
+```bash
+git clone https://github.com/yoligehude14753/openfiles.git
+cd openfiles
+./setup.sh
+```
+
+Then start the backend and frontend:
+
+```bash
+# Terminal 1 - Backend
+source venv/bin/activate
+python main.py serve
+
+# Terminal 2 - Frontend
+cd frontend && npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
 ## Roadmap
 
 - [x] Chat interface with RAG (Retrieval-Augmented Generation)
-- [x] OpenAI Responses API support (GPT-5.4-nano, GPT-5, etc.)
 - [x] Ollama (local LLM) support
 - [x] Hybrid search (vector + keyword)
 - [x] File watcher (real-time indexing)
 - [x] Multi-format parsers (PDF, DOCX, XLSX, PPTX, images, code)
 - [x] Dark mode UI with i18n (English + Chinese)
+- [ ] Voice input (OpenAI Realtime API)
+- [ ] Desktop app (Tauri) with Spotlight-style UX
 - [ ] Slide-level search & export
 - [ ] Plugin system for custom parsers
-- [ ] Desktop app (Tauri)
-- [ ] Voice input
 - [ ] Multi-user support
 
 ## Contributing
@@ -174,4 +184,4 @@ npm run dev  # Frontend with hot reload
 
 ---
 
-**ChatFiles** is built with Python, React, and a lot of caffeine. If you find it useful, please give it a star!
+**OpenFiles** is built with Python, React, and a lot of caffeine. If you find it useful, please give it a star!

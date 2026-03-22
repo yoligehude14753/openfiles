@@ -51,7 +51,7 @@ export default function VoiceOverlay({ apiBase, onClose, onTranscript }: Props) 
             type: "session.update",
             session: {
               modalities: ["text", "audio"],
-              instructions: "You are ChatFiles, a local file search assistant. Be concise. Use the search_files tool when the user asks about their files.",
+              instructions: "You are OpenFiles, a local file search assistant. Be concise. Use the search_files tool when the user asks about their files.",
               voice: "alloy",
               input_audio_transcription: { model: "whisper-1" },
               tools: [{

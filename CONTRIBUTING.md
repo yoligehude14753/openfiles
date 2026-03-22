@@ -1,4 +1,4 @@
-# Contributing to ChatFiles
+# Contributing to OpenFiles
 
 Thank you for your interest in contributing! Here's how to get started.
 
@@ -6,8 +6,8 @@ Thank you for your interest in contributing! Here's how to get started.
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourname/chatfiles.git
-cd chatfiles
+git clone https://github.com/yoligehude14753/openfiles.git
+cd openfiles
 
 # Run the setup script
 ./setup.sh
@@ -24,7 +24,7 @@ npm run dev
 ## Project Structure
 
 ```
-chatfiles/
+openfiles/
 ├── src/                    # Python backend
 │   ├── api/                # FastAPI routes
 │   ├── chat/               # RAG chat engine

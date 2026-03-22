@@ -51,7 +51,7 @@ async def lifespan(app: FastAPI):
             settings.ollama_host,
         )
 
-    logger.info("ChatFiles backend started on %s:%s", settings.web_host, settings.web_port)
+    logger.info("OpenFiles backend started on %s:%s", settings.web_host, settings.web_port)
     yield
 
     if _vector_store:
@@ -59,8 +59,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="ChatFiles",
-    description="Chat with your files. Locally. Privately.",
+    title="OpenFiles",
+    description="Open-source AI assistant for your local files.",
     version="0.1.0",
     lifespan=lifespan,
 )

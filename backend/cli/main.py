@@ -16,7 +16,7 @@ console = Console()
 
 @click.group()
 def cli():
-    """ChatFiles - Chat with your files. Locally. Privately."""
+    """OpenFiles - Open-source AI assistant for your local files."""
     pass
 
 
@@ -113,7 +113,7 @@ def search(query: str, limit: int, search_type: str):
     try:
         db_path = Path(settings.database_path)
         if not db_path.exists():
-            console.print("[red]Database not initialized. Run 'chatfiles init' first.[/red]")
+            console.print("[red]Database not initialized. Run 'openfiles init' first.[/red]")
             return
 
         engine = init_db(str(db_path))
@@ -192,7 +192,7 @@ def stats():
         total_cost = session.query(func.sum(CostTracking.cost_usd)).scalar() or 0.0
         total_tokens = session.query(func.sum(CostTracking.tokens)).scalar() or 0
 
-        table = Table(title="ChatFiles Statistics")
+        table = Table(title="OpenFiles Statistics")
         table.add_column("Metric", style="cyan")
         table.add_column("Value", style="green")
 
@@ -214,7 +214,7 @@ def stats():
 @click.option("--host", default=None, help="Host to bind to")
 @click.option("--port", default=None, type=int, help="Port to bind to")
 def serve(host: str, port: int):
-    """Start the ChatFiles web server."""
+    """Start the OpenFiles web server."""
     host = host or settings.web_host
     port = port or settings.web_port
 
@@ -224,7 +224,7 @@ def serve(host: str, port: int):
         db_path.parent.mkdir(parents=True, exist_ok=True)
         init_db(str(db_path))
 
-    console.print(f"[green]Starting ChatFiles at http://{host}:{port}[/green]")
+    console.print(f"[green]Starting OpenFiles at http://{host}:{port}[/green]")
     console.print("[dim]Press Ctrl+C to stop[/dim]")
 
     uvicorn.run(

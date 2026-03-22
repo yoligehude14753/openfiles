@@ -41,10 +41,16 @@ async def get_settings():
     if _llm_service:
         ollama_available = await _llm_service.check_ollama_available()
 
+    def _mask_key(key: str) -> str:
+        if not key or len(key) < 8:
+            return "***" if key else ""
+        return key[:4] + "****" + key[-4:]
+
     return {
         "llm_provider": settings.llm_provider,
         "embedding_provider": settings.embedding_provider,
-        "yunwu_api_key": settings.yunwu_api_key,
+        "yunwu_api_key_masked": _mask_key(settings.yunwu_api_key),
+        "yunwu_api_key_set": bool(settings.yunwu_api_key),
         "yunwu_base_url": settings.yunwu_base_url,
         "yunwu_model": settings.yunwu_model,
         "ollama_host": settings.ollama_host,

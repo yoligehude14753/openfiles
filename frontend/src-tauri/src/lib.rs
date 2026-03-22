@@ -42,12 +42,12 @@ pub fn run() {
                 .expect("failed to register global shortcut");
 
             // Spawn Python sidecar
-            let sidecar = app.shell().sidecar("chatfiles-server")
+            let sidecar = app.shell().sidecar("openfiles-server")
                 .expect("failed to create sidecar command");
 
             match sidecar.spawn() {
                 Ok((_rx, child)) => {
-                    println!("ChatFiles server started (sidecar)");
+                    println!("OpenFiles server started (sidecar)");
                     let state = app.state::<ServerChild>();
                     *state.0.lock().unwrap() = Some(child);
                 }
@@ -58,7 +58,7 @@ pub fn run() {
 
             // Build tray menu
             let show_i = MenuItem::with_id(app, "show", "Search (⌘⇧Space)", true, None::<&str>)?;
-            let quit_i = MenuItem::with_id(app, "quit", "Quit ChatFiles", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quit OpenFiles", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
             TrayIconBuilder::new()

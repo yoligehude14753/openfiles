@@ -45,11 +45,11 @@ export default function Onboarding({ apiBase, onComplete }: Props) {
         transition={{ duration: 0.3 }}
       >
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-2xl mb-4 shadow-lg shadow-brand-500/20">
-          C
+          O
         </div>
       </motion.div>
 
-      <h1 className="text-lg font-semibold text-zinc-100 mb-1">Welcome to ChatFiles</h1>
+      <h1 className="text-lg font-semibold text-zinc-100 mb-1">Welcome to OpenFiles</h1>
       <p className="text-sm text-zinc-500 mb-6">Let's set up your local file assistant</p>
 
       {/* Step indicators */}
