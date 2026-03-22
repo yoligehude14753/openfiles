@@ -36,4 +36,4 @@ If you discover a security vulnerability, please report it responsibly:
 
 - All file content, embeddings, and metadata are stored locally in SQLite.
 - When using Ollama, no data leaves your machine.
-- When using cloud LLM providers (OpenAI, Yunwu, etc.), file summaries and search queries are sent to the provider's API. Review your provider's data retention policy.
+- When using cloud LLM providers (OpenAI, OpenRouter, etc.), file summaries and search queries are sent to the provider's API. Review your provider's data retention policy.

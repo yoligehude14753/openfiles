@@ -4,6 +4,7 @@ import logging
 from fastapi import APIRouter
 from pydantic import BaseModel
 from sqlalchemy import func
+from typing import Optional
 
 from src.api.app import get_db_session, _llm_service
 from src.core.config import settings
@@ -35,24 +36,27 @@ async def stats():
         session.close()
 
 
+def _mask_key(key: str) -> str:
+    if not key or len(key) < 8:
+        return "***" if key else ""
+    return key[:4] + "****" + key[-4:]
+
+
 @router.get("/settings")
 async def get_settings():
     ollama_available = False
     if _llm_service:
         ollama_available = await _llm_service.check_ollama_available()
 
-    def _mask_key(key: str) -> str:
-        if not key or len(key) < 8:
-            return "***" if key else ""
-        return key[:4] + "****" + key[-4:]
+    api_key = settings.effective_compatible_api_key
 
     return {
         "llm_provider": settings.llm_provider,
         "embedding_provider": settings.embedding_provider,
-        "yunwu_api_key_masked": _mask_key(settings.yunwu_api_key),
-        "yunwu_api_key_set": bool(settings.yunwu_api_key),
-        "yunwu_base_url": settings.yunwu_base_url,
-        "yunwu_model": settings.yunwu_model,
+        "api_key_masked": _mask_key(api_key),
+        "api_key_set": bool(api_key),
+        "api_base_url": settings.effective_compatible_base_url,
+        "api_model": settings.effective_compatible_model,
         "ollama_host": settings.ollama_host,
         "ollama_model": settings.ollama_model,
         "ollama_available": ollama_available,
@@ -62,9 +66,6 @@ async def get_settings():
         "monthly_budget_usd": settings.monthly_budget_usd,
         "platform": platform.system(),
     }
-
-
-from typing import Optional
 
 
 class SettingsUpdate(BaseModel):

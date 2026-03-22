@@ -18,7 +18,7 @@ class LLMService:
         self.embedding_provider = settings.embedding_provider
         self.encoding = tiktoken.get_encoding("cl100k_base")
 
-        self._yunwu_client = None
+        self._compatible_client = None
         self._anthropic_client = None
         self._openai_client = None
         self._kimi_client = None
@@ -27,16 +27,18 @@ class LLMService:
         self._init_providers()
 
     def _init_providers(self):
-        if settings.yunwu_api_key:
+        api_key = settings.effective_compatible_api_key
+        base_url = settings.effective_compatible_base_url
+        if api_key and base_url:
             try:
                 import openai
-                self._yunwu_client = openai.OpenAI(
-                    api_key=settings.yunwu_api_key,
-                    base_url=settings.yunwu_base_url,
+                self._compatible_client = openai.OpenAI(
+                    api_key=api_key,
+                    base_url=base_url,
                 )
-                logger.info("Yunwu client initialized (model: %s)", settings.yunwu_model)
+                logger.info("OpenAI-compatible client initialized (base: %s)", base_url)
             except Exception as e:
-                logger.warning("Failed to init Yunwu client: %s", e)
+                logger.warning("Failed to init OpenAI-compatible client: %s", e)
 
         if settings.anthropic_api_key:
             try:
@@ -95,8 +97,8 @@ class LLMService:
         stream: bool = False,
         temperature: float = 0.7,
     ):
-        if self.provider == "yunwu" and self._yunwu_client:
-            return await self._chat_yunwu(messages, stream, temperature)
+        if self.provider in ("yunwu", "openai-compatible") and self._compatible_client:
+            return await self._chat_compatible(messages, stream, temperature)
         elif self.provider == "ollama":
             return await self._chat_ollama(messages, stream, temperature)
         elif self.provider == "openai" and self._openai_client:
@@ -111,7 +113,8 @@ class LLMService:
                 "Check your API keys in .env"
             )
 
-    async def _chat_yunwu(self, messages, stream, temperature):
+    async def _chat_compatible(self, messages, stream, temperature):
+        model = settings.effective_compatible_model
         instructions = None
         input_msgs = []
         for m in messages:
@@ -121,7 +124,7 @@ class LLMService:
                 input_msgs.append(m)
 
         kwargs = {
-            "model": settings.yunwu_model,
+            "model": model,
             "input": input_msgs,
             "temperature": temperature,
             "stream": stream,
@@ -130,13 +133,13 @@ class LLMService:
             kwargs["instructions"] = instructions
 
         if stream:
-            return self._stream_yunwu_responses(kwargs)
+            return self._stream_compatible_responses(kwargs)
 
-        response = self._yunwu_client.responses.create(**kwargs)
+        response = self._compatible_client.responses.create(**kwargs)
         return response.output_text
 
-    async def _stream_yunwu_responses(self, kwargs):
-        stream = self._yunwu_client.responses.create(**kwargs)
+    async def _stream_compatible_responses(self, kwargs):
+        stream = self._compatible_client.responses.create(**kwargs)
         for event in stream:
             if hasattr(event, "type") and event.type == "response.output_text.delta":
                 if hasattr(event, "delta"):
@@ -261,8 +264,8 @@ Respond ONLY with valid JSON:
             return {"error": str(e), "success": False}
 
     async def analyze_image(self, image_path: Path) -> Dict[str, Any]:
-        if self.provider == "yunwu" and self._yunwu_client:
-            return await self._analyze_image_with_yunwu(image_path)
+        if self.provider in ("yunwu", "openai-compatible") and self._compatible_client:
+            return await self._analyze_image_with_compatible(image_path)
         elif self.provider == "claude" and self._anthropic_client:
             return await self._analyze_image_with_claude(image_path)
         elif self.provider == "openai" and self._openai_client:
@@ -271,13 +274,14 @@ Respond ONLY with valid JSON:
             return await self._analyze_image_with_ollama(image_path)
         return {"error": "No vision-capable provider configured", "success": False}
 
-    async def _analyze_image_with_yunwu(self, image_path: Path) -> Dict[str, Any]:
+    async def _analyze_image_with_compatible(self, image_path: Path) -> Dict[str, Any]:
         try:
+            model = settings.effective_compatible_model
             with open(image_path, "rb") as f:
                 image_data = base64.standard_b64encode(f.read()).decode("utf-8")
             media_type = self._get_media_type(image_path)
-            response = self._yunwu_client.responses.create(
-                model=settings.yunwu_model,
+            response = self._compatible_client.responses.create(
+                model=model,
                 input=[{
                     "role": "user",
                     "content": [
@@ -295,7 +299,7 @@ Respond ONLY with valid JSON:
                 "category": result.get("category", "image"),
                 "confidence": 0.9,
                 "tokens": getattr(response.usage, "total_tokens", 0) if response.usage else 0,
-                "model": settings.yunwu_model,
+                "model": model,
                 "success": True,
             }
         except Exception as e:
@@ -357,8 +361,8 @@ Respond ONLY with valid JSON:
     # ── Embeddings ───────────────────────────────────────────────
 
     async def get_embedding(self, text: str) -> Optional[List[float]]:
-        if self.embedding_provider == "yunwu" and self._yunwu_client:
-            return await self._get_yunwu_embedding(text)
+        if self.embedding_provider in ("yunwu", "openai-compatible") and self._compatible_client:
+            return await self._get_compatible_embedding(text)
         elif self.embedding_provider == "ollama":
             return await self._get_ollama_embedding(text)
         elif self.embedding_provider == "openai" and self._openai_client:
@@ -367,17 +371,17 @@ Respond ONLY with valid JSON:
             return self._get_local_embedding(text)
         return None
 
-    async def _get_yunwu_embedding(self, text: str) -> Optional[List[float]]:
+    async def _get_compatible_embedding(self, text: str) -> Optional[List[float]]:
         try:
             if len(text) > 8000:
                 text = text[:8000]
-            response = self._yunwu_client.embeddings.create(
-                model=settings.yunwu_embedding_model,
+            response = self._compatible_client.embeddings.create(
+                model=settings.effective_compatible_embedding_model,
                 input=text,
             )
             return response.data[0].embedding
         except Exception as e:
-            logger.error("Yunwu embedding failed: %s", e)
+            logger.error("OpenAI-compatible embedding failed: %s", e)
             return None
 
     async def _get_ollama_embedding(self, text: str) -> Optional[List[float]]:
@@ -420,7 +424,8 @@ Respond ONLY with valid JSON:
 
     def _current_model_name(self) -> str:
         return {
-            "yunwu": settings.yunwu_model,
+            "yunwu": settings.effective_compatible_model,
+            "openai-compatible": settings.effective_compatible_model,
             "ollama": settings.ollama_model,
             "openai": "gpt-4o-mini",
             "claude": "claude-3-5-sonnet-20241022",

@@ -40,7 +40,7 @@ Open [http://localhost:3000](http://localhost:3000)
 - **Node.js 18+** (for the web UI)
 - One of the following LLM providers:
   - **Ollama** (fully local, no API key) — install from [ollama.com](https://ollama.com)
-  - **Any OpenAI-compatible API** (e.g. OpenRouter, Yunwu, etc.)
+  - **Any OpenAI-compatible API** (e.g. OpenRouter, Together, etc.)
   - **OpenAI** directly
 
 ## Use Cases
@@ -65,7 +65,7 @@ Open [http://localhost:3000](http://localhost:3000)
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
 │   Frontend   │────▶│   FastAPI     │────▶│  LLM Provider   │
 │   React/TS   │◀────│   Backend     │◀────│  (Ollama/OpenAI/ │
-└─────────────┘     └──────┬───────┘     │   Yunwu/...)    │
+└─────────────┘     └──────┬───────┘     │   and more...)  │
                            │              └─────────────────┘
                     ┌──────┴───────┐
                     │   SQLite     │
@@ -75,7 +75,7 @@ Open [http://localhost:3000](http://localhost:3000)
 
 - **Frontend**: React + TypeScript + Tailwind CSS
 - **Backend**: FastAPI + Python
-- **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Yunwu, Claude, Kimi)
+- **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Claude, and more)
 - **Embeddings**: text-embedding-3-small (default), Ollama, or local SentenceTransformers
 - **Storage**: SQLite for metadata + numpy-powered vector similarity search
 - **Parsing**: PyPDF2, python-docx, python-pptx, openpyxl, Pillow, BeautifulSoup
@@ -85,15 +85,15 @@ Open [http://localhost:3000](http://localhost:3000)
 Copy `.env.example` to `.env` and customize:
 
 ```bash
-# Use Ollama (local, no API key)
+# Use Ollama (local, no API key — recommended)
 LLM_PROVIDER=ollama
 EMBEDDING_PROVIDER=ollama
 
 # Or use any OpenAI-compatible API
-LLM_PROVIDER=yunwu
-YUNWU_API_KEY=sk-your-key
-YUNWU_BASE_URL=https://yunwu.ai/v1
-YUNWU_MODEL=gpt-5.4-nano
+LLM_PROVIDER=openai-compatible
+OPENAI_COMPATIBLE_API_KEY=sk-your-key
+OPENAI_COMPATIBLE_BASE_URL=https://api.example.com/v1
+OPENAI_COMPATIBLE_MODEL=gpt-4o-mini
 
 # Directories to index
 SCAN_DIRECTORIES=~/Documents,~/Desktop,~/Downloads

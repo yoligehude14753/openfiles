@@ -10,7 +10,13 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     kimi_api_key: str = ""
 
-    # Yunwu API (OpenAI-compatible proxy for Gemini etc.)
+    # OpenAI-compatible API
+    openai_compatible_api_key: str = ""
+    openai_compatible_base_url: str = ""
+    openai_compatible_model: str = "gpt-4o-mini"
+    openai_compatible_embedding_model: str = "text-embedding-3-small"
+
+    # Legacy yunwu fields (mapped to openai-compatible)
     yunwu_api_key: str = ""
     yunwu_base_url: str = "https://yunwu.ai/v1"
     yunwu_model: str = "gpt-5.4-nano"
@@ -21,11 +27,11 @@ class Settings(BaseSettings):
     ollama_model: str = "llama3.2"
     ollama_embedding_model: str = "nomic-embed-text"
 
-    # LLM Provider: yunwu, ollama, openai, claude, kimi
-    llm_provider: str = "yunwu"
+    # LLM Provider: ollama, openai, claude, kimi, openai-compatible, yunwu
+    llm_provider: str = "ollama"
 
-    # Embedding Provider: yunwu, ollama, openai, local
-    embedding_provider: str = "yunwu"
+    # Embedding Provider: ollama, openai, local, openai-compatible, yunwu
+    embedding_provider: str = "ollama"
     embedding_model: str = "text-embedding-3-small"
 
     # Database

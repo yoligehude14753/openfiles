@@ -10,7 +10,7 @@
 
 - **语义搜索** — 输入"找我的 Q4 预算报告"，根据内容匹配，而不是文件名
 - **带引用的问答** — 对文件提问，AI 回答时标注来源文件
-- **灵活的 LLM** — 支持任何 OpenAI 兼容 API（Ollama、OpenAI、云雾等）
+- **灵活的 LLM** — 支持任何 OpenAI 兼容 API（Ollama、OpenAI、OpenRouter 等）
 - **混合搜索** — 语义向量搜索 + 关键词匹配，检索更精准
 - **实时索引** — 监控目录变化，自动索引新增和修改的文件
 - **隐私优先** — 文件留在本地。用 Ollama 可以完全离线运行
@@ -50,14 +50,15 @@ cd frontend && npm run dev
 复制 `.env.example` 到 `.env` 并修改：
 
 ```bash
-# 使用 Ollama（本地运行，无需 API Key）
+# 使用 Ollama（推荐，本地运行，无需 API Key）
 LLM_PROVIDER=ollama
 EMBEDDING_PROVIDER=ollama
 
-# 或使用云雾 API（推荐，支持 GPT-5/Gemini 等模型）
-LLM_PROVIDER=yunwu
-YUNWU_API_KEY=sk-你的密钥
-YUNWU_MODEL=gpt-5.4-nano
+# 或使用任意 OpenAI 兼容 API
+LLM_PROVIDER=openai-compatible
+OPENAI_COMPATIBLE_API_KEY=sk-你的密钥
+OPENAI_COMPATIBLE_BASE_URL=https://api.example.com/v1
+OPENAI_COMPATIBLE_MODEL=gpt-4o-mini
 ```
 
 ## CLI 命令

@@ -219,17 +219,18 @@ async def delete_conversation(conversation_id: int):
 
 @router.websocket("/realtime")
 async def realtime_proxy(ws: WebSocket):
-    """Proxy WebSocket to Yunwu Realtime API (browser can't set auth headers)."""
+    """Proxy WebSocket to OpenAI-compatible Realtime API (browser can't set auth headers)."""
     await ws.accept()
 
-    yunwu_url = f"wss://yunwu.ai/v1/realtime?model=gpt-4o-realtime-preview"
+    base = settings.effective_compatible_base_url.replace("https://", "wss://").replace("http://", "ws://")
+    realtime_url = f"{base}/realtime?model=gpt-4o-realtime-preview"
     headers = {
-        "Authorization": f"Bearer {settings.yunwu_api_key}",
+        "Authorization": f"Bearer {settings.effective_compatible_api_key}",
         "OpenAI-Beta": "realtime=v1",
     }
 
     try:
-        async with websockets.connect(yunwu_url, additional_headers=headers) as upstream:
+        async with websockets.connect(realtime_url, additional_headers=headers) as upstream:
 
             async def client_to_upstream():
                 try:
