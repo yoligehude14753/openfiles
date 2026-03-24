@@ -52,9 +52,9 @@ export default function ResultList({
       {results.map((r, i) => {
         const Icon = ICONS[r.type] || File;
         const typeColor = TYPE_COLORS[r.type] || "bg-zinc-500/15 text-zinc-400";
-        const filename = r.path.split("/").pop() || r.path;
-        const lastSlash = r.path.lastIndexOf("/");
-        const dir = lastSlash > 0 ? r.path.substring(0, lastSlash) : "";
+        const parts = r.path.split("/");
+        const filename = parts.pop() || r.path;
+        const dir = parts.length > 2 ? parts.slice(-2).join("/") : parts.join("/");
         const score = Math.round((r.similarity || 0) * 100);
         const isSelected = i === selectedIdx;
 
