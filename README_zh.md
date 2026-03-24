@@ -11,6 +11,7 @@
     <img src="https://img.shields.io/badge/python-3.9+-blue" alt="Python">
   </p>
   <p align="center">
+    <a href="https://github.com/yoligehude14753/openfiles/releases/latest"><strong>下载 .dmg</strong></a> &middot;
     <a href="#快速开始">快速开始</a> &middot;
     <a href="#核心功能">核心功能</a> &middot;
     <a href="#工作原理">工作原理</a> &middot;

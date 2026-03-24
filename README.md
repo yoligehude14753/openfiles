@@ -12,6 +12,7 @@
     <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform">
   </p>
   <p align="center">
+    <a href="https://github.com/yoligehude14753/openfiles/releases/latest"><strong>Download .dmg</strong></a> &middot;
     <a href="#quick-start">Quick Start</a> &middot;
     <a href="#features">Features</a> &middot;
     <a href="#how-it-works">How It Works</a> &middot;
