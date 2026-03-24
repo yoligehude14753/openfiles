@@ -8,27 +8,14 @@ use std::sync::Mutex;
 
 struct ServerChild(Mutex<Option<tauri_plugin_shell::process::CommandChild>>);
 
-const WINDOW_WIDTH: f64 = 680.0;
-const COMPACT_HEIGHT: f64 = 56.0;
-
 fn toggle_spotlight(app: &tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("spotlight") {
         if window.is_visible().unwrap_or(false) {
             let _ = window.hide();
-            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, COMPACT_HEIGHT));
         } else {
-            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, COMPACT_HEIGHT));
-            if let Some(monitor) = app.primary_monitor().ok().flatten() {
-                let screen = monitor.size();
-                let scale = monitor.scale_factor();
-                let sw = screen.width as f64 / scale;
-                let sh = screen.height as f64 / scale;
-                let x = (sw - WINDOW_WIDTH) / 2.0;
-                let y = sh * 0.22;
-                let _ = window.set_position(tauri::LogicalPosition::new(x, y));
-            }
             let _ = window.show();
             let _ = window.set_focus();
+            let _ = window.center();
         }
     }
 }
@@ -54,20 +41,18 @@ pub fn run() {
                 .register("CmdOrCtrl+Shift+Space")
                 .expect("failed to register global shortcut");
 
-            // Spawn Python sidecar (skip in dev mode if binary not bundled)
-            match app.shell().sidecar("openfiles-server") {
-                Ok(sidecar) => match sidecar.spawn() {
-                    Ok((_rx, child)) => {
-                        println!("[openfiles] server started (sidecar)");
-                        let state = app.state::<ServerChild>();
-                        *state.0.lock().unwrap() = Some(child);
-                    }
-                    Err(_) => {
-                        println!("[openfiles] using external backend at localhost:8000");
-                    }
-                },
-                Err(_) => {
-                    println!("[openfiles] using external backend at localhost:8000");
+            // Spawn Python sidecar
+            let sidecar = app.shell().sidecar("openfiles-server")
+                .expect("failed to create sidecar command");
+
+            match sidecar.spawn() {
+                Ok((_rx, child)) => {
+                    println!("OpenFiles server started (sidecar)");
+                    let state = app.state::<ServerChild>();
+                    *state.0.lock().unwrap() = Some(child);
+                }
+                Err(e) => {
+                    eprintln!("Failed to start sidecar: {}. Assuming external server.", e);
                 }
             }
 

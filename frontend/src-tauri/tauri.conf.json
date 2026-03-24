@@ -11,18 +11,17 @@
   },
   "app": {
     "withGlobalTauri": true,
-    "macOSPrivateApi": true,
     "windows": [
       {
         "label": "spotlight",
         "title": "OpenFiles",
         "url": "/",
         "width": 680,
-        "height": 56,
-        "center": false,
+        "height": 520,
+        "center": true,
         "resizable": false,
         "decorations": false,
-        "transparent": true,
+        "transparent": false,
         "alwaysOnTop": true,
         "visible": false,
         "skipTaskbar": true
@@ -41,7 +40,9 @@
       "icons/128x128.png",
       "icons/128x128@2x.png"
     ],
-    "externalBin": []
+    "externalBin": [
+      "binaries/openfiles-server"
+    ]
   },
   "plugins": {
     "shell": {
