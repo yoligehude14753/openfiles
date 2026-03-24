@@ -58,16 +58,16 @@ pub fn run() {
             match app.shell().sidecar("openfiles-server") {
                 Ok(sidecar) => match sidecar.spawn() {
                     Ok((_rx, child)) => {
-                        println!("OpenFiles server started (sidecar)");
+                        println!("[openfiles] server started (sidecar)");
                         let state = app.state::<ServerChild>();
                         *state.0.lock().unwrap() = Some(child);
                     }
-                    Err(e) => {
-                        eprintln!("Sidecar not started: {}. Assuming external server.", e);
+                    Err(_) => {
+                        println!("[openfiles] using external backend at localhost:8000");
                     }
                 },
                 Err(_) => {
-                    println!("No sidecar binary found — using external backend at localhost:8000");
+                    println!("[openfiles] using external backend at localhost:8000");
                 }
             }
 

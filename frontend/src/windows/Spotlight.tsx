@@ -22,9 +22,9 @@ const MAX_WINDOW_HEIGHT = 560;
 
 async function resizeTauriWindow(height: number) {
   try {
-    const { getCurrentWindow } = await import("@tauri-apps/api/window");
+    const { getCurrentWindow, LogicalSize } = await import("@tauri-apps/api/window");
     const h = Math.min(Math.round(height), MAX_WINDOW_HEIGHT);
-    await getCurrentWindow().setSize({ type: "Logical", width: 680, height: h });
+    await getCurrentWindow().setSize(new LogicalSize(680, h));
   } catch {}
 }
 
