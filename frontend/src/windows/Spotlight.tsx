@@ -179,7 +179,7 @@ export default function SpotlightWindow() {
 
   if (checkingSetup) {
     return (
-      <div className="w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center" style={{ height: SEARCH_BAR_HEIGHT }}>
+      <div className="w-screen bg-zinc-900/80 backdrop-blur-2xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center" style={{ height: SEARCH_BAR_HEIGHT }}>
         <motion.div
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ duration: 1.5, repeat: Infinity }}
@@ -196,7 +196,7 @@ export default function SpotlightWindow() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
-      className="w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex flex-col overflow-hidden"
+      className="w-screen bg-zinc-900/80 backdrop-blur-2xl rounded-2xl border border-zinc-700/50 shadow-2xl flex flex-col overflow-hidden"
       style={{ maxHeight: MAX_WINDOW_HEIGHT }}
       onKeyDown={handleKeyDown}
     >
