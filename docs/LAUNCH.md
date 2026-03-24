@@ -1,117 +1,53 @@
 # OpenFiles Launch Plan
 
-## Positioning
+## Core Positioning
 
-**One-liner**: "Open-source AI file assistant — search, understand, and chat with your local files. Runs locally with Ollama."
+**What it is:** Open-source AI file assistant — search by meaning, chat with citations, 100% local.
 
-**Technical angle** (Hacker News): "Show HN: OpenFiles — local RAG over your filesystem with Ollama, FastAPI, and React"
+**Why it matters:** Everyone has files they can't find. Spotlight/Everything only match filenames. OpenFiles understands what's *inside* your files.
 
-**Self-hosting angle** (r/selfhosted): "OpenFiles: self-hosted AI file search. No cloud, no API keys, just Ollama + Docker."
+**Key differentiator:** General-purpose local file assistant with hybrid search (semantic + keyword), not just "chat with one PDF".
 
-**Privacy angle**: "Your files never leave your machine. OpenFiles indexes locally and uses Ollama for zero-cloud AI search."
+## Angles by Platform
 
----
+| Platform | Angle | Hook |
+|----------|-------|------|
+| Hacker News | Technical simplicity | "SQLite + numpy vectors, no ChromaDB/Pinecone" |
+| r/selfhosted | Zero dependencies | "docker compose up, no cloud, no API keys" |
+| r/LocalLLaMA | Ollama-native RAG | "llama3.2 + nomic-embed-text, hybrid retrieval" |
+| V2EX | Pain point | "记得内容忘了文件名" |
+| Twitter/X | Visual demo | GIF showing search -> chat -> citation |
+| Product Hunt | Product story | "Your files, searchable by meaning" |
 
-## Hacker News Post
+## What's Shipped (safe to claim)
 
-**Title**: Show HN: OpenFiles – Search and chat with your local files using Ollama (open source)
-
-**Body**:
-
-Hi HN, I built OpenFiles — an open-source AI file assistant that indexes your local documents and lets you search and chat with them.
-
-Key features:
-- Uses Ollama by default (no API keys needed, nothing sent to the cloud)
-- Indexes PDFs, Word docs, spreadsheets, presentations, images, code
-- Hybrid search: vector embeddings + keyword matching
-- FastAPI backend with streaming WebSocket responses
-- React frontend with dark mode
+- Web UI with semantic search and RAG chat
+- 27 file type parsers
+- Hybrid search (70% vector + 30% keyword)
+- Real-time file watcher
+- Ollama / OpenAI / Claude support
 - Docker Compose one-command setup
+- CLI tools
+- Dark mode + i18n (EN/中文)
 
-Stack: Python/FastAPI, React/TypeScript/Tailwind, SQLite + numpy vectors, Ollama
+## What's In Development (mention as roadmap only)
 
-The main difference from similar tools: OpenFiles is designed as a general-purpose local file assistant, not just for a specific document type. It watches your directories and auto-indexes changes.
+- Voice input (OpenAI Realtime API)
+- Desktop app (Tauri) with Spotlight-style UX
+- Plugin system for custom parsers
 
-GitHub: [link]
-Demo: [screenshot/gif]
+## Pre-launch Checklist
 
----
+- [ ] Record demo.gif (10-15s: query -> results -> chat -> citation)
+- [ ] Place demo.gif in `docs/assets/demo.gif`
+- [ ] Verify `docker compose up` works clean on a fresh clone
+- [ ] Take 3 screenshots: search results, chat with citations, settings page
+- [ ] Test GitHub URL works: https://github.com/yoligehude14753/openfiles
 
-## Reddit r/selfhosted Post
+## Launch Timing
 
-**Title**: OpenFiles - Self-hosted AI file assistant. Index your docs, chat with them. No cloud needed.
-
-**Body**:
-
-Just released OpenFiles, an open-source alternative to cloud-based document AI tools.
-
-- Docker Compose setup (backend + frontend + Ollama)
-- Indexes: PDF, DOCX, XLSX, PPTX, images, code, markdown
-- Chat interface with file citations
-- Completely local — uses Ollama, no API keys required
-- Also supports OpenAI/Claude if you prefer
-
-`docker compose up` and you're running.
-
-GitHub: [link]
-
----
-
-## Reddit r/LocalLLaMA Post
-
-**Title**: OpenFiles: RAG-powered file search using Ollama locally
-
-**Body**:
-
-Built a local RAG system that indexes your filesystem and lets you chat with your files using Ollama.
-
-Uses nomic-embed-text for embeddings and llama3.2 for chat. Hybrid retrieval (vector + keyword). Supports PDFs, spreadsheets, presentations, code files, and images (with llava).
-
-FastAPI backend, React frontend, Docker setup included.
-
-GitHub: [link]
-
----
-
-## Product Hunt
-
-**Tagline**: Search, understand, and chat with your local files.
-
-**Description**: OpenFiles is an open-source AI file assistant that indexes your local documents (PDFs, Word, Excel, PowerPoint, images, code) and lets you ask questions about them in a beautiful chat interface. Powered by Ollama for 100% local operation — no API keys, no cloud, no data leaks.
-
-**Topics**: Open Source, Artificial Intelligence, Developer Tools, Privacy, Productivity
-
----
-
-## Social Media (Twitter/X)
-
-**Launch tweet**:
-
-Introducing OpenFiles — search, understand, and chat with your files, 100% locally.
-
-Open-source AI file assistant:
-- Indexes PDFs, docs, spreadsheets, code, images
-- Runs with Ollama (no API keys)
-- Hybrid search: vector + keyword
-- Beautiful dark mode UI
-
-docker compose up and you're running.
-
-github.com/...
-
----
-
-## Demo Scenarios
-
-1. **Quick search**: "Find my Q4 budget report" -> shows matching PDF with summary
-2. **Summarization**: "Summarize the main points from my project proposal" -> RAG-powered summary with citations
-3. **Cross-file Q&A**: "Which spreadsheets contain revenue data?" -> finds multiple matching XLSX files
-4. **Code search**: "Where is the authentication logic?" -> finds relevant Python/JS files
-
-## Key Screenshots Needed
-
-1. Welcome screen (clean, inviting)
-2. Chat conversation with file citations
-3. File browser with type filters
-4. Settings panel showing Ollama connected
-5. Terminal showing `docker compose up` starting successfully
+Best times (in US Pacific / Beijing):
+- **Hacker News**: Tuesday-Thursday, 6-8am PT / 21:00-23:00 Beijing
+- **Reddit**: Same day, post within 1 hour of HN
+- **Twitter**: Next day, with demo.gif
+- **Product Hunt**: Week 2, after initial star momentum
