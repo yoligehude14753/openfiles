@@ -29,7 +29,22 @@
 
 ## 快速开始
 
-30 秒启动：
+### 方式一：macOS 桌面应用（推荐）
+
+1. 安装 [Ollama](https://ollama.com) 并拉取模型：
+
+```bash
+ollama pull qwen3-vl:8b
+ollama pull EntropyYue/jina-embeddings-v2-base-zh
+```
+
+2. 下载安装 [OpenFiles.dmg](https://github.com/yoligehude14753/openfiles/releases/latest)
+
+3. 从应用中打开 OpenFiles，按 `Cmd+Shift+Space` 开始搜索
+
+完成。文件自动索引，一切本地运行，无需 API Key。
+
+### 方式二：Docker
 
 ```bash
 git clone https://github.com/yoligehude14753/openfiles.git
@@ -39,8 +54,6 @@ docker compose up
 ```
 
 打开 [http://localhost:3000](http://localhost:3000)，开始搜索。
-
-> 默认使用 [Ollama](https://ollama.com) —— 无需 API Key，数据不出本机。
 
 ## 核心功能
 

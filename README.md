@@ -30,7 +30,22 @@
 
 ## Quick Start
 
-Get running in 30 seconds:
+### Option 1: macOS App (recommended)
+
+1. Install [Ollama](https://ollama.com) and pull the models:
+
+```bash
+ollama pull qwen3-vl:8b
+ollama pull EntropyYue/jina-embeddings-v2-base-zh
+```
+
+2. Download and install [OpenFiles.dmg](https://github.com/yoligehude14753/openfiles/releases/latest)
+
+3. Open OpenFiles from Applications, press `Cmd+Shift+Space` to search
+
+That's it. Your files are indexed automatically, everything runs locally.
+
+### Option 2: Docker
 
 ```bash
 git clone https://github.com/yoligehude14753/openfiles.git
@@ -40,8 +55,6 @@ docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000) and start searching.
-
-> Uses [Ollama](https://ollama.com) by default — no API keys, nothing leaves your machine.
 
 ## Features
 
