@@ -17,11 +17,11 @@
         "title": "OpenFiles",
         "url": "/",
         "width": 680,
-        "height": 520,
-        "center": true,
+        "height": 68,
+        "center": false,
         "resizable": false,
         "decorations": false,
-        "transparent": false,
+        "transparent": true,
         "alwaysOnTop": true,
         "visible": false,
         "skipTaskbar": true
@@ -40,9 +40,7 @@
       "icons/128x128.png",
       "icons/128x128@2x.png"
     ],
-    "externalBin": [
-      "binaries/openfiles-server"
-    ]
+    "externalBin": []
   },
   "plugins": {
     "shell": {

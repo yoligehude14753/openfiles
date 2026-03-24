@@ -12,6 +12,22 @@ const API = (window as any).__TAURI__
   ? "/api/v1"
   : "http://localhost:8000/api/v1";
 
+const SEARCH_BAR_HEIGHT = 54;
+const STATUS_BAR_HEIGHT = 32;
+const RESULT_ROW_HEIGHT = 56;
+const MAX_VISIBLE_RESULTS = 6;
+const AI_PANEL_HEIGHT = 240;
+const IDLE_EXTRA = 0;
+const MAX_WINDOW_HEIGHT = 520;
+
+async function resizeTauriWindow(height: number) {
+  try {
+    const { getCurrentWindow } = await import("@tauri-apps/api/window");
+    const h = Math.min(Math.round(height), MAX_WINDOW_HEIGHT);
+    await getCurrentWindow().setSize({ type: "Logical", width: 680, height: h });
+  } catch {}
+}
+
 type Mode = "idle" | "searching" | "results" | "ai" | "voice" | "onboarding";
 
 export default function SpotlightWindow() {
@@ -51,7 +67,7 @@ export default function SpotlightWindow() {
       const res = await fetch(`${API}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q, type: "files", limit: 6 }),
+        body: JSON.stringify({ query: q, type: "files", limit: MAX_VISIBLE_RESULTS }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -95,6 +111,35 @@ export default function SpotlightWindow() {
     };
   }, [query, search]);
 
+  const mode: Mode = voiceActive
+    ? "voice"
+    : needsOnboarding
+    ? "onboarding"
+    : isAsking || aiAnswer || aiError
+    ? "ai"
+    : results.length > 0
+    ? "results"
+    : isSearching
+    ? "searching"
+    : "idle";
+
+  useEffect(() => {
+    let h = SEARCH_BAR_HEIGHT;
+    if (mode === "results") {
+      h += Math.min(results.length, MAX_VISIBLE_RESULTS) * RESULT_ROW_HEIGHT + STATUS_BAR_HEIGHT;
+    } else if (mode === "ai") {
+      const resultsH = Math.min(results.length, MAX_VISIBLE_RESULTS) * RESULT_ROW_HEIGHT;
+      h += resultsH + AI_PANEL_HEIGHT + STATUS_BAR_HEIGHT;
+    } else if (mode === "searching") {
+      h += 60;
+    } else if (mode === "onboarding" || mode === "voice") {
+      h = MAX_WINDOW_HEIGHT;
+    } else {
+      h += IDLE_EXTRA;
+    }
+    resizeTauriWindow(h);
+  }, [mode, results.length]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       if (voiceActive) {
@@ -132,21 +177,9 @@ export default function SpotlightWindow() {
     }
   };
 
-  const mode: Mode = voiceActive
-    ? "voice"
-    : needsOnboarding
-    ? "onboarding"
-    : isAsking || aiAnswer || aiError
-    ? "ai"
-    : results.length > 0
-    ? "results"
-    : isSearching
-    ? "searching"
-    : "idle";
-
   if (checkingSetup) {
     return (
-      <div className="h-screen w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center">
+      <div className="w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center" style={{ height: SEARCH_BAR_HEIGHT }}>
         <motion.div
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ duration: 1.5, repeat: Infinity }}
@@ -160,13 +193,13 @@ export default function SpotlightWindow() {
 
   return (
     <motion.div
-      initial={{ scale: 0.96, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-      className="h-screen w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex flex-col overflow-hidden"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+      className="w-screen bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl flex flex-col overflow-hidden"
+      style={{ maxHeight: MAX_WINDOW_HEIGHT }}
       onKeyDown={handleKeyDown}
     >
-      {/* Search bar */}
       {!needsOnboarding && (
         <SearchInput
           query={query}
@@ -177,36 +210,18 @@ export default function SpotlightWindow() {
         />
       )}
 
-      {/* Main content area */}
       <div ref={resultsRef} className="flex-1 overflow-y-auto min-h-0">
         <AnimatePresence mode="wait">
           {needsOnboarding ? (
-            <motion.div
-              key="onboarding"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Onboarding
-                apiBase={API}
-                onComplete={() => setNeedsOnboarding(false)}
-              />
+            <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <Onboarding apiBase={API} onComplete={() => setNeedsOnboarding(false)} />
             </motion.div>
           ) : voiceActive ? (
-            <motion.div
-              key="voice"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-            >
+            <motion.div key="voice" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
               <VoiceOverlay
                 apiBase={API}
                 onClose={() => setVoiceActive(false)}
-                onTranscript={(text) => {
-                  setQuery(text);
-                  setVoiceActive(false);
-                  askAI(text);
-                }}
+                onTranscript={(text) => { setQuery(text); setVoiceActive(false); askAI(text); }}
               />
             </motion.div>
           ) : (
@@ -231,35 +246,8 @@ export default function SpotlightWindow() {
                 />
               )}
 
-              {mode === "idle" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="flex flex-col items-center justify-center h-full text-zinc-500 text-sm py-12"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg shadow-brand-500/20">
-                    O
-                  </div>
-                  <p className="text-zinc-300 font-medium mb-1">
-                    What are you looking for?
-                  </p>
-                  <p className="text-xs text-zinc-600">
-                    <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-400 text-[10px]">
-                      ⌘⏎
-                    </kbd>{" "}
-                    AI answer
-                    <span className="mx-2 text-zinc-700">|</span>
-                    <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-400 text-[10px]">
-                      ⌘⇧V
-                    </kbd>{" "}
-                    Voice
-                  </p>
-                </motion.div>
-              )}
-
               {mode === "searching" && (
-                <div className="flex items-center justify-center py-8">
+                <div className="flex items-center justify-center py-4">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -272,8 +260,7 @@ export default function SpotlightWindow() {
         </AnimatePresence>
       </div>
 
-      {/* Status bar */}
-      {!needsOnboarding && (
+      {!needsOnboarding && mode !== "idle" && (
         <StatusBar mode={mode} resultsCount={results.length} />
       )}
     </motion.div>
