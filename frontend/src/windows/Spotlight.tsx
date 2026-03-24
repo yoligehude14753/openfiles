@@ -239,7 +239,7 @@ export default function SpotlightWindow() {
                   className="flex flex-col items-center justify-center h-full text-zinc-500 text-sm py-12"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg shadow-brand-500/20">
-                    C
+                    O
                   </div>
                   <p className="text-zinc-300 font-medium mb-1">
                     What are you looking for?
