@@ -9,15 +9,15 @@ use std::sync::Mutex;
 struct ServerChild(Mutex<Option<tauri_plugin_shell::process::CommandChild>>);
 
 const WINDOW_WIDTH: f64 = 680.0;
-const INITIAL_HEIGHT: f64 = 44.0;
+const COMPACT_HEIGHT: f64 = 44.0;
 
 fn toggle_spotlight(app: &tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("spotlight") {
         if window.is_visible().unwrap_or(false) {
             let _ = window.hide();
-            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, INITIAL_HEIGHT));
+            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, COMPACT_HEIGHT));
         } else {
-            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, INITIAL_HEIGHT));
+            let _ = window.set_size(tauri::LogicalSize::new(WINDOW_WIDTH, COMPACT_HEIGHT));
             if let Some(monitor) = app.primary_monitor().ok().flatten() {
                 let screen = monitor.size();
                 let scale = monitor.scale_factor();

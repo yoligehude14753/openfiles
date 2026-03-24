@@ -12,18 +12,13 @@ const API = (window as any).__TAURI__
   ? "/api/v1"
   : "http://localhost:8000/api/v1";
 
-const SEARCH_BAR_HEIGHT = 44;
-const STATUS_BAR_HEIGHT = 28;
-const RESULT_ROW_HEIGHT = 52;
-const MAX_VISIBLE_RESULTS = 7;
-const AI_PANEL_HEIGHT = 260;
-const IDLE_EXTRA = 0;
-const MAX_WINDOW_HEIGHT = 560;
+const COMPACT_HEIGHT = 44;
+const EXPANDED_HEIGHT = 500;
 
-async function resizeTauriWindow(height: number) {
+async function resizeTauriWindow(expanded: boolean) {
   try {
     const { getCurrentWindow, LogicalSize } = await import("@tauri-apps/api/window");
-    const h = Math.min(Math.round(height), MAX_WINDOW_HEIGHT);
+    const h = expanded ? EXPANDED_HEIGHT : COMPACT_HEIGHT;
     await getCurrentWindow().setSize(new LogicalSize(680, h));
   } catch {}
 }
@@ -123,22 +118,11 @@ export default function SpotlightWindow() {
     ? "searching"
     : "idle";
 
+  const hasContent = mode !== "idle";
+
   useEffect(() => {
-    let h = SEARCH_BAR_HEIGHT;
-    if (mode === "results") {
-      h += Math.min(results.length, MAX_VISIBLE_RESULTS) * RESULT_ROW_HEIGHT + STATUS_BAR_HEIGHT;
-    } else if (mode === "ai") {
-      const resultsH = Math.min(results.length, MAX_VISIBLE_RESULTS) * RESULT_ROW_HEIGHT;
-      h += resultsH + AI_PANEL_HEIGHT + STATUS_BAR_HEIGHT;
-    } else if (mode === "searching") {
-      h += 60;
-    } else if (mode === "onboarding" || mode === "voice") {
-      h = MAX_WINDOW_HEIGHT;
-    } else {
-      h += IDLE_EXTRA;
-    }
-    resizeTauriWindow(h);
-  }, [mode, results.length]);
+    resizeTauriWindow(hasContent);
+  }, [hasContent]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -197,7 +181,7 @@ export default function SpotlightWindow() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
       className="w-screen bg-zinc-900/95 backdrop-blur-2xl rounded-2xl border border-zinc-700/50 shadow-2xl flex flex-col overflow-hidden"
-      style={{ maxHeight: MAX_WINDOW_HEIGHT }}
+      style={{ height: "100vh" }}
       onKeyDown={handleKeyDown}
     >
       {!needsOnboarding && (
