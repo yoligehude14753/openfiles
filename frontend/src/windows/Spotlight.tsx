@@ -12,13 +12,13 @@ const API = (window as any).__TAURI__
   ? "/api/v1"
   : "http://localhost:8000/api/v1";
 
-const SEARCH_BAR_HEIGHT = 54;
-const STATUS_BAR_HEIGHT = 32;
-const RESULT_ROW_HEIGHT = 56;
-const MAX_VISIBLE_RESULTS = 6;
-const AI_PANEL_HEIGHT = 240;
+const SEARCH_BAR_HEIGHT = 44;
+const STATUS_BAR_HEIGHT = 28;
+const RESULT_ROW_HEIGHT = 52;
+const MAX_VISIBLE_RESULTS = 7;
+const AI_PANEL_HEIGHT = 260;
 const IDLE_EXTRA = 0;
-const MAX_WINDOW_HEIGHT = 520;
+const MAX_WINDOW_HEIGHT = 560;
 
 async function resizeTauriWindow(height: number) {
   try {

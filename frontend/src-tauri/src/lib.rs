@@ -9,7 +9,7 @@ use std::sync::Mutex;
 struct ServerChild(Mutex<Option<tauri_plugin_shell::process::CommandChild>>);
 
 const WINDOW_WIDTH: f64 = 680.0;
-const INITIAL_HEIGHT: f64 = 68.0;
+const INITIAL_HEIGHT: f64 = 44.0;
 
 fn toggle_spotlight(app: &tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("spotlight") {

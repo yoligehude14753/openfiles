@@ -24,7 +24,7 @@ export default function SearchInput({
   }, [voiceActive]);
 
   return (
-    <div className="relative flex items-center gap-3 px-4 py-3.5 border-b border-zinc-700/50">
+    <div className="relative flex items-center gap-3 px-4 py-2.5 border-b border-zinc-700/50">
       <motion.div
         animate={isSearching ? { rotate: 360 } : { rotate: 0 }}
         transition={isSearching ? { duration: 0.8, repeat: Infinity, ease: "linear" } : {}}
