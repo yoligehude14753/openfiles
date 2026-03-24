@@ -12,7 +12,7 @@ const API = (window as any).__TAURI__
   ? "/api/v1"
   : "http://localhost:8000/api/v1";
 
-const COMPACT_HEIGHT = 44;
+const COMPACT_HEIGHT = 56;
 const EXPANDED_HEIGHT = 500;
 
 async function resizeTauriWindow(expanded: boolean) {
@@ -163,7 +163,7 @@ export default function SpotlightWindow() {
 
   if (checkingSetup) {
     return (
-      <div className="w-screen bg-zinc-900/95 backdrop-blur-2xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center" style={{ height: SEARCH_BAR_HEIGHT }}>
+      <div className="w-screen bg-zinc-900/95 backdrop-blur-2xl rounded-2xl border border-zinc-700/50 shadow-2xl flex items-center justify-center" style={{ height: COMPACT_HEIGHT }}>
         <motion.div
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ duration: 1.5, repeat: Infinity }}
