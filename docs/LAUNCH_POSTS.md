@@ -68,7 +68,7 @@ What it does:
 4. Real-time: watches your directories, auto-indexes new/changed files
 
 Self-hosting highlights:
-- Default LLM: Ollama (llama3.2 + nomic-embed-text) — no API keys needed
+- Default LLM: Ollama (qwen3-vl for chat + vision, Jina embeddings) — no API keys needed
 - Storage: SQLite only — no Postgres, no Redis, no vector DB
 - Setup: `docker compose up` (backend + frontend + Ollama, all included)
 - Also supports OpenAI/Claude if you prefer cloud models
@@ -96,7 +96,7 @@ OpenFiles: local RAG over your filesystem with Ollama — hybrid search, no vect
 Built an open-source file assistant that indexes your local documents and lets you search + chat with them using Ollama.
 
 Architecture:
-- llama3.2 for chat, nomic-embed-text for embeddings (configurable)
+- qwen3-vl:8b for chat + vision, Jina embeddings for vectors (configurable)
 - SQLite stores everything: file metadata + 1536-dim vectors + chat history
 - Hybrid retrieval: numpy cosine similarity (0.7 weight) + keyword matching (0.3)
 - No ChromaDB, no Pinecone, no FAISS — just numpy on raw vectors in SQLite
@@ -104,10 +104,10 @@ Architecture:
 - React frontend with dark mode
 
 The retrieval pipeline:
-1. User query → embed with nomic-embed-text
+1. User query → embed with Jina embeddings
 2. numpy cosine similarity against stored file embeddings → top-K candidates
 3. Keyword score against file summaries/keywords → merge with vector results
-4. RAG: feed top results as context to llama3.2 → generate answer with citations
+4. RAG: feed top results as context to qwen3-vl → generate answer with citations
 
 Supports 27 file types. File watcher auto-indexes changes. Docker Compose setup included.
 
@@ -144,7 +144,7 @@ OpenFiles：开源 AI 文件助手，用自然语言搜文件内容，Ollama 本
 - 前端：React + TypeScript + Tailwind
 - 存储：SQLite 存一切（元数据 + 1536 维向量 + 对话历史）
 - 搜索：混合检索，70% 语义向量（numpy 余弦相似度）+ 30% 关键词匹配
-- LLM：默认用 Ollama（llama3.2 + nomic-embed-text），无需 API Key
+- LLM：默认用 Ollama（qwen3-vl 多模态 + Jina embedding），无需 API Key
 - 也支持 OpenAI / Claude 等云端模型
 
 一条命令启动：
@@ -234,11 +234,11 @@ OpenFiles 是一个开源的 AI 文件助手。它索引你的本地文件，让
 
 搜索用的是混合检索：70% 语义向量匹配 + 30% 关键词匹配。
 
-向量部分：用 Ollama 的 nomic-embed-text 生成 1536 维 embedding，存在 SQLite 里，搜索时用 numpy 做余弦相似度计算。
+向量部分：用 Ollama 的 Jina embeddings 生成向量，存在 SQLite 里，搜索时用 numpy 做余弦相似度计算。
 
 没有用 ChromaDB、Pinecone 这些向量数据库。纯 SQLite + numpy 在万级文件规模下表现够用，而且部署简单得多。
 
-LLM 部分：默认用 Ollama 的 llama3.2，完全本地运行，不需要任何 API Key，文件数据不出本机。也支持 OpenAI、Claude 等云端模型。
+LLM 部分：默认用 Ollama 的 qwen3-vl（多模态，支持图片理解），完全本地运行，不需要任何 API Key，文件数据不出本机。也支持 OpenAI、Claude 等云端模型。
 
 全栈：Python FastAPI 后端 + React TypeScript 前端 + SQLite 存储。
 

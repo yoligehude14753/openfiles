@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Internationalization support (English and Chinese)
 - Docker Compose setup with Ollama integration
 - Multiple LLM provider support: Ollama (local), OpenAI, Claude, and any OpenAI-compatible API
-- Multiple embedding provider support: text-embedding-3-small, Ollama nomic-embed-text, local SentenceTransformers
+- Multiple embedding provider support: Jina embeddings (default), text-embedding-3-small, local SentenceTransformers
 - SQLite-based storage for metadata, vectors, and chat history
 - API key masking in settings endpoint
 - Cost tracking and budget controls

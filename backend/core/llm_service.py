@@ -307,7 +307,7 @@ Respond ONLY with valid JSON:
                 image_b64 = base64.standard_b64encode(f.read()).decode("utf-8")
             url = f"{settings.ollama_host}/api/chat"
             payload = {
-                "model": "llava",
+                "model": settings.ollama_model,
                 "messages": [{"role": "user", "content": 'Analyze this image. Respond with JSON: {"summary": "...", "keywords": "...", "category": "..."}', "images": [image_b64]}],
                 "stream": False,
                 "options": {"temperature": 0.3},
@@ -317,7 +317,7 @@ Respond ONLY with valid JSON:
                 resp.raise_for_status()
                 content = resp.json()["message"]["content"]
                 result = self._parse_json_response(content)
-                return {"summary": result.get("summary", content[:500]), "keywords": result.get("keywords", ""), "category": result.get("category", "image"), "confidence": 0.85, "tokens": 0, "model": "llava", "success": True}
+                return {"summary": result.get("summary", content[:500]), "keywords": result.get("keywords", ""), "category": result.get("category", "image"), "confidence": 0.85, "tokens": 0, "model": settings.ollama_model, "success": True}
         except Exception as e:
             return {"error": str(e), "success": False}
 

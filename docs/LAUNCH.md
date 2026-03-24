@@ -14,7 +14,7 @@
 |----------|-------|------|
 | Hacker News | Technical simplicity | "SQLite + numpy vectors, no ChromaDB/Pinecone" |
 | r/selfhosted | Zero dependencies | "docker compose up, no cloud, no API keys" |
-| r/LocalLLaMA | Ollama-native RAG | "llama3.2 + nomic-embed-text, hybrid retrieval" |
+| r/LocalLLaMA | Ollama-native RAG | "qwen3-vl + jina embeddings, hybrid retrieval" |
 | V2EX | Pain point | "记得内容忘了文件名" |
 | Twitter/X | Visual demo | GIF showing search -> chat -> citation |
 | Product Hunt | Product story | "Your files, searchable by meaning" |

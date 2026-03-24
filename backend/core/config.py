@@ -24,8 +24,8 @@ class Settings(BaseSettings):
 
     # Ollama (local LLM)
     ollama_host: str = "http://localhost:11434"
-    ollama_model: str = "llama3.2"
-    ollama_embedding_model: str = "nomic-embed-text"
+    ollama_model: str = "qwen3-vl:8b"
+    ollama_embedding_model: str = "EntropyYue/jina-embeddings-v2-base-zh"
 
     # LLM Provider: ollama, openai, claude, kimi, openai-compatible, yunwu
     llm_provider: str = "ollama"

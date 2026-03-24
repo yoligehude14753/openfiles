@@ -52,8 +52,8 @@ echo ""
 if command -v ollama &> /dev/null; then
     echo "✓ Ollama detected"
     echo "  Pulling recommended models..."
-    ollama pull llama3.2 2>/dev/null || echo "  (Pull llama3.2 manually: ollama pull llama3.2)"
-    ollama pull nomic-embed-text 2>/dev/null || echo "  (Pull nomic-embed-text manually: ollama pull nomic-embed-text)"
+    ollama pull qwen3-vl:8b 2>/dev/null || echo "  (Pull manually: ollama pull qwen3-vl:8b)"
+    ollama pull EntropyYue/jina-embeddings-v2-base-zh 2>/dev/null || echo "  (Pull manually: ollama pull EntropyYue/jina-embeddings-v2-base-zh)"
 else
     echo "⚠ Ollama not found. Install from https://ollama.com for local LLM support."
     echo "  Or set OPENAI_API_KEY in .env to use OpenAI instead."
